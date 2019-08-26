@@ -2,18 +2,16 @@
     - BEM?
 3. Add dropdown for Class/ add Stats in a Form - StatsForm
     - lock other classes
-    - Input fields for all Stats
-    - sent input as a Form
-    - popups for wrong/invalid input while writing
-    - Boss or Player target 60-63 option
 4. Make func that recieve input from StatsForm, convert input and sends to Func CalcDps
     - JS Advanced, Classes?
     - Recieve from form data, convert and return object
-5. HTML Desighn - resemblin gBlizzard site and other wow free images
+5. HTML Desighn - resembling Blizzard site and other wow free images
+    - Look for Free images
 6. Upload to Server
     - Protect code
     - catchy name
 7. Add API Talent Calculator
+    - fetch from Classicdb.ch ??
 8. Improve DPS calculations
     - Option to add FireBlast dps
     - Option to add Evocation

@@ -1,59 +1,59 @@
+// On Load set BIS before MC stats
 window.onload = function () {
-    document.getElementById('input_intelect').value = 231;
-    document.getElementById('input_spirit').value = 201;
+    document.getElementById('input_intelect').value = 241;
+    document.getElementById('input_spirit').value = 190;
     document.getElementById('input_mana_per_5').value = 8;
-    document.getElementById('input_spell_dmg').value = 276
-    document.getElementById('input_spell_hit').value = 2;
-    document.getElementById('input_spell_crit').value = 2;
+    document.getElementById('input_spell_dmg').value = 306;
+    document.getElementById('input_spell_hit').value = 3;
+    document.getElementById('input_spell_crit').value = 4;
 }
-
 
 let character_stats = {};
 
-// Spell before Dire Maul
+// Mage Spell Info before Dire Maul
 const spells = {
+    // FrostBolt Rank 10
+    frost_bolt: {
+        name: 'Frostbolt',
+        dmg: (429 + 464) / 2,
+        cost: 260,
+        cast_time: 3,
+        add_spd: function () {
+            return this.dmg + (character_stats.spell_dmg * 0.814)
+        }
+    },
+    // Arcane Missiles Rank 7
+    arcane_missiles: {
+        name: 'Arcane Missiles',
+        dmg: 192 * 5,
+        cost: 595,
+        cast_time: 5,
+        add_spd: function () {
+            return this.dmg + character_stats.spell_dmg
+        }
+    },
+    // Fire Ball Rank 11
+    fire_ball: {
+        name: 'Fire Ball',
+        dmg: (561 + 716) / 2,
+        cost: 395,
+        cast_time: 3.5,
+        add_spd: function () {
+            return this.dmg + character_stats.spell_dmg
+        }
+    },
+    // Scorch Rank
+    scorch: {
+        name: 'Scorch',
+        dmg: (233 + 276) / 2,
+        cost: 150,
+        cast_time: 1.5,
+        add_spd: function () {
+            return this.dmg + character_stats.spell_dmg
+        }
+    }
+}
 
-}
-// FrostBolt Rank 10
-const frost_bolt = {
-    name: 'Frostbolt',
-    dmg: (429 + 464) / 2,
-    cost: 260,
-    cast_time: 3,
-    add_spd: function () {
-        return this.dmg + character_stats.spell_dmg
-    }
-}
-// Arcane Missiles Rank 7
-const arcane_missiles = {
-    name: 'Arcane Missiles',
-    dmg: 192 * 5,
-    cost: 595,
-    cast_time: 5,
-    add_spd: function () {
-        return this.dmg + character_stats.spell_dmg
-    }
-}
-// Fire Ball Rank 11
-const fire_ball = {
-    name: 'Fire Ball',
-    dmg: (561 + 716) / 2,
-    cost: 395,
-    cast_time: 3.5,
-    add_spd: function () {
-        return this.dmg + character_stats.spell_dmg
-    }
-}
-// Scorch Rank
-const scorch = {
-    name: 'Scorch',
-    dmg: (233 + 276) / 2,
-    cost: 150,
-    cast_time: 1.5,
-    add_spd: function () {
-        return this.dmg + character_stats.spell_dmg
-    }
-}
 
 function get_input() {
     character_stats = {};
@@ -64,8 +64,6 @@ function get_input() {
     character_stats.spell_dmg = Number(document.getElementById('input_spell_dmg').value);
     character_stats.hit_chance = Number(document.getElementById('input_spell_hit').value);
     character_stats.crit_chance = Number(document.getElementById('input_spell_crit').value);
-
-    create_character_stats();
 };
 
 function create_character_stats() {
@@ -75,11 +73,13 @@ function create_character_stats() {
     character_stats.mana_regen_from_spirit = (13 + (character_stats.spirit / 4)) / 2;
     character_stats.out_of_combat_mana_regen_per_sec = character_stats.mana_regen_from_spirit;
     // Adding Crit chance from base and intelecct
-    character_stats.crit_chance += (5 + Math.round(character_stats.intelect / 59));
+    character_stats.crit_chance += (5 + Math.round(character_stats.intelect / 59.5));
 }
 
 function calculate_dps(spec) {
     get_input();
+    create_character_stats();
+
     let result = document.getElementById('result');
     result.textContent = '';
 
@@ -247,7 +247,7 @@ function calculate_dps(spec) {
         let time_in_seconds = 0;
         let total_dmg = 0;
 
-        // Fire not owrking with new stats: character_stats
+        // Fire not working with new stats: character_stats
         // Check Enemy LvL - hit chance
         if (spec === 'fire') {
             while (character_current_mana > 0) {
@@ -280,22 +280,10 @@ function calculate_dps(spec) {
                 }
             }
         } else {
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 500; i++) {
                 let character_current_mana = character_stats.max_mana;
                 while (character_current_mana > 0) {
-                    let hit_percent = character_stats.hit_chance + 96;
-                    // Calc. hit chance and enemy lvl
-                    if (character_stats.enemy_lvl === 63) {
-                        hit_percent -= 13;
-                        if (hit_percent > 99) {
-                            hit_percent = 99
-                        }
-                    } else {
-                        if (hit_percent > 99) {
-                            hit_percent = 99
-                        }
-                    }
-
+                    let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
                     // Calculating if it Hits
                     if (roll_if_success(hit_percent)) {
                         // Calculating if it Crits
@@ -313,7 +301,7 @@ function calculate_dps(spec) {
             }
         }
 
-        printResult(total_dmg / 100, time_in_seconds / 100);
+        printResult(total_dmg / 500, time_in_seconds / 500);
 
         console.log(`Specialisation - ${spec.toUpperCase()}`);
         console.log(`Total damage done: ${total_dmg} `);
@@ -322,24 +310,24 @@ function calculate_dps(spec) {
     }
 
     function printResult(total, seconds) {
-        result.textContent += `Specialisation - ${spec.toUpperCase()}\nTotal damage done: ${total}\nDamage Per Second: ${Math.round(total / seconds)}\nTime elapsed: ${seconds}\n\n`;
+        result.textContent += `Specialisation - ${spec.toUpperCase()}\nTotal damage done: ${Math.round(total)}\nDamage Per Second: ${Math.round(total / seconds)}\nTime elapsed: ${seconds}\n\n`;
     };
 
     function check_correct_hit_chance(char_hit, enemy_lvl) {
-        let hit_percent = 96 + char_hit;
+        let num = 96 + char_hit;
         // Calc. hit chance and enemy lvl
         if (enemy_lvl === 63) {
-            hit_percent -= 13;
-            if (hit_percent > 99) {
-                hit_percent = 99
+            num -= 13;
+            if (num > 99) {
+                num = 99
             }
         } else {
-            if (hit_percent > 99) {
-                hit_percent = 99
+            if (num > 99) {
+                num = 99
             }
         }
 
-        return hit_percent
+        return num
     };
 
     function roll_if_success(chance) {
@@ -357,6 +345,7 @@ function calculate_dps(spec) {
 // MC Mage avrg DPS ~ 362
 
 // TODO:
+// - Add Arc Power + Trinket!
 // - Spirit tick on 2 sec
 // - Add FireBlast casting option
 // - Random spell Dmg?

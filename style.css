@@ -1,0 +1,29 @@
+body{
+    /* background-image: url('https://bnetcmsus-a.akamaihd.net/cms/template_resource/NABVOYB8JXDV1556236141640.jpg');
+    background-image: url('wow_classic_ragnaros_1920x1080.jpg');
+    background-repeat: no-repeat; */
+}
+span {
+    font-weight: bold;
+}
+form[name='CharStats'] div{
+    margin: 1%;
+}
+.wrapper {
+    padding: 1%;
+}
+.wrapper h1, .wrapper h3 {
+    text-align: center;
+}
+.stats {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+.stats input {
+    text-align: center;
+    margin-bottom: inherit;
+    max-width: 70px;
+}
+.stats, .buffs {
+    width: 50%;
+}

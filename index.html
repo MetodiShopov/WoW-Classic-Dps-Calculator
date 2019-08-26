@@ -6,43 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Mage DPS Calculator</title>
+    <link rel="stylesheet" href="style.css">
     <script src="mage_dps.js"></script>
-    <style>
-        /* body{
-            background-image: url('https://bnetcmsus-a.akamaihd.net/cms/template_resource/NABVOYB8JXDV1556236141640.jpg');
-            background-repeat: no-repeat;
-        } */
-    </style>
 </head>
 
 <body>
     <div class="wrapper">
+        <h1>Classic DPS Calculator</h1>
         <form name="CharStats" action="javascript:calculate_dps('raid_arc');">
-            <span>Choose a Class:</span>
-            <select name="class" id="chosen_class">
-                <option value="mage">Mage</option>
-                <option value="priest" disabled>Priest</option>
-                <option value="priest" disabled>Warlock</option>
-            </select>
-            <span>Enemy LvL:</span>
-            <select name="enemy_lvl" id="enemy_lvl">
-                <option value="63">Boss Level (63)</option>
-                <option value="60">Player lvl (60)</option>
-            </select>
-            <br>
-            <br>
-            <label for="input_intelect">Intelect:</label>
-            <input type="number" id="input_intelect" required min="0" step="1" title="Positive integer">
-            <label for="input_spirit">Spirit:</label>
-            <input type="number" id="input_spirit" required min="0" step="1" title="Positive integer">
-            <label for="input_mana_per_5">Mana per 5 sec:</label>
-            <input type="number" id="input_mana_per_5" required min="0" step="1" title="Positive integer">
-            <label for="input_spell_dmg">Plus Spell Damage:</label>
-            <input type="number" id="input_spell_dmg" required min="0" step="1" title="Positive integer">
-            <label for="input_spell_hit">Spell Hit in %:</label>
-            <input type="number" id="input_spell_hit" required min="0" step="1" title="Positive integer">
-            <label for="input_spell_crit">Spell Crit in %:</label>
-            <input type="number" id="input_spell_crit" required min="0" step="1" title="Positive integer">
+            <div>
+                <span>Choose a Class:</span>
+                <select name="class" id="chosen_class" disabled>
+                    <option value="mage">Mage</option>
+                    <option value="priest" disabled>Priest</option>
+                    <option value="priest" disabled>Warlock</option>
+                </select>
+            </div>
+            <div>
+                <span>Enemy LvL:</span>
+                <select name="enemy_lvl" id="enemy_lvl">
+                    <option value="63">Boss Level (63)</option>
+                    <option value="60">Player lvl (60)</option>
+                </select>
+            </div>
+            <h3>Character Stats</h3>
+            <div class="stats">
+                <label for="input_intelect">Intelect:</label>
+                <input type="number" id="input_intelect" required min="0" step="1" title="Positive integer">
+                <label for="input_spirit">Spirit:</label>
+                <input type="number" id="input_spirit" required min="0" step="1" title="Positive integer">
+                <label for="input_mana_per_5">Mana per 5 sec:</label>
+                <input type="number" id="input_mana_per_5" required min="0" step="1" title="Positive integer">
+                <label for="input_spell_dmg">Plus Spell Damage:</label>
+                <input type="number" id="input_spell_dmg" required min="0" step="1" title="Positive integer">
+                <label for="input_spell_hit">Spell Hit in %:</label>
+                <input type="number" id="input_spell_hit" required min="0" step="1" title="Positive integer">
+                <label for="input_spell_crit">Spell Crit in %:</label>
+                <input type="number" id="input_spell_crit" required min="0" step="1" title="Positive integer">
+            </div>
+            <div class="buffs">
+
+            </div>
+            <div>
+                <span>Talents Used:</spans>
+                    <a target="_blank" rel="noopener noreferrer"
+                        href="https://classicdb.ch/?talent#of0ycocquZVA0c0s">Link</a>
+            </div>
+            <div>
+                <span>Spell Used:</span>
+                <select name="spell" id="chosen_spell" disabled>
+                    <option value="frost_bolt">Frost Bolt</option>
+                </select>
+            </div>
             <input class="submit" name="submit" type="submit" value="Calculate" />
             <input type="reset" value="Reset">
         </form>

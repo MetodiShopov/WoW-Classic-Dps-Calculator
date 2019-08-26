@@ -6,27 +6,29 @@
 // Chest - Robe of the Archmage
 // Wrists - none
 // Hands - Hands of Power
-// Waist - Thuzadin Sash
+// Waist - Ban'thok Sash
 // Legs - Wolfshear Leggings
 // Feet - Omnicast Boots
 // Ring 1 - Don Mauricio's Band of Domination
 // Ring 2 - Eye of Orgrimmar
-// Trinket 1 - none
-// Trinket 2 - none
+// Trinket 1 - Eye of the Beast
+// Trinket 2 - Briarwood Reed
 // Weapon - Witchblade
 // Offhand - Tome of the Lost
 // Wand - Bonecreeper Stylus
 
 let arcane_BIS = {
     name: 'Arcane BIS',
-    stamina: 45,
-    intelect: 102,
-    spirit: 51,
-    spell_dmg: 276,
-    spell_hit: 2,
-    spell_crit: 2,
+    spirit: 40,
+    stamina: 54,
+    intelect: 112,
+    spell_hit: 3,
+    spell_dmg: 306,
+    spell_crit: 4,
     mana_per_5_in_seconds: 1.7
 }
+console.log(arcane_BIS);
+
 let net_bis = {
     name: 'Net BIS',
     stamina: 48,
