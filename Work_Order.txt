@@ -1,35 +1,32 @@
-1. HTML Skeleton
+- HTML Skeleton
     - BEM?
-3. Add dropdown for Class/ add Stats in a Form - StatsForm
-    - lock other classes
-4. Make func that recieve input from StatsForm, convert input and sends to Func CalcDps
+- Make func that recieve input from StatsForm, convert input and sends to Func CalcDps
     - JS Advanced, Classes?
     - Recieve from form data, convert and return object
-5. HTML Desighn - resembling Blizzard site and other wow free images
+@ HTML Desighn - resembling Blizzard site and other wow free images
     - Look for Free images
-6. Upload to Server
+- Upload to Server
     - Protect code
     - catchy name
-7. Add API Talent Calculator
+- Landing Page - DPS calc/ About Page(contacts) / News and Future updates
+    - info for future classes on hover
+- Paypal support the developer + email for contacts
+    - Patreon?
+- Add API Talent Calculator
     - fetch from Classicdb.ch ??
-8. Improve DPS calculations
+- Improve DPS calculations
     - Option to add FireBlast dps
     - Option to add Evocation
-    - Math.Random for Hit/Crit/Spell dmg/
-    - Averege dps from 3 or 5 tries
+    - Math.Random for Spell dmg
     - Add Spell Rank option ?
     - Add All Spell info??
-    - Future option to add Buffs/Consumables input checkbox
-9. Landing Page - DPS calc/ About Page(contacts) / News and Future updates
-    - info for future classes on hover
-10. Paypal support the developer + email for contacts
-    - Patreon?
-11. Add Login to save Character Stats
+    - Missing Buffs
+- Add Login to save Character Stats
     - 3 or 5 Characters
-12. Add caster DPSes 
+- Add caster DPSes 
     - Priest
     - Find PPL to advise for future classes dps function
     - Warlock
     - ELemental Shaman
     - Balance Druid
-13. Add Melle DPSes
+- Add Melle DPSes

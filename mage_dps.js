@@ -1,11 +1,11 @@
 // On Load set BIS before MC stats
 window.onload = function () {
-    document.getElementById('input_intelect').value = 241;
-    document.getElementById('input_spirit').value = 190;
+    document.getElementById('input_intelect').value = 283;
+    document.getElementById('input_spirit').value = 194;
     document.getElementById('input_mana_per_5').value = 8;
-    document.getElementById('input_spell_dmg').value = 306;
-    document.getElementById('input_spell_hit').value = 3;
-    document.getElementById('input_spell_crit').value = 4;
+    document.getElementById('input_spell_dmg').value = 220;
+    document.getElementById('input_spell_hit').value = 2;
+    document.getElementById('input_spell_crit').value = 3;
 }
 
 let character_stats = {};
@@ -42,7 +42,7 @@ const spells = {
             return this.dmg + character_stats.spell_dmg
         }
     },
-    // Scorch Rank
+    // Scorch Rank 7
     scorch: {
         name: 'Scorch',
         dmg: (233 + 276) / 2,
@@ -67,7 +67,7 @@ function get_input() {
 };
 
 function create_character_stats() {
-    character_stats.max_mana = character_stats.intelect * 15;
+    character_stats.max_mana = (character_stats.intelect * 15) + 933;
     character_stats.in_combat_mana_regen = character_stats.mana_per_5 / 5;
     // Calculate regeneretion from Spirit
     character_stats.mana_regen_from_spirit = (13 + (character_stats.spirit / 4)) / 2;
@@ -81,7 +81,7 @@ function calculate_dps(spec) {
     create_character_stats();
 
     let result = document.getElementById('result');
-    result.textContent = '';
+    result.textContent = 'RESULTS:\n';
 
     // Using Mage Armor + Arcane Intelect + Mana Ruby
     character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.3;
@@ -345,6 +345,7 @@ function calculate_dps(spec) {
 // MC Mage avrg DPS ~ 362
 
 // TODO:
+// - Add Clear Casting
 // - Add Arc Power + Trinket!
 // - Spirit tick on 2 sec
 // - Add FireBlast casting option

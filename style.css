@@ -1,29 +1,56 @@
 body{
-    /* background-image: url('https://bnetcmsus-a.akamaihd.net/cms/template_resource/NABVOYB8JXDV1556236141640.jpg');
-    background-image: url('wow_classic_ragnaros_1920x1080.jpg');
-    background-repeat: no-repeat; */
+    /* background-image: url('wow_classic_ragnaros_1920x1080.jpg'); */
+    background-image: url('https://bnetcmsus-a.akamaihd.net/cms/template_resource/NABVOYB8JXDV1556236141640.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+form{
+    width: 250px;
+    /* margin: auto; */
+    padding: 2%;
+    background-color: burlywood;
+    /* opacity: 0.9; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+form[name='CharStats'] div{
+    margin: 5px;
+}
+pre {
+    width: 250px;
+    margin: 0;
+    padding: 2%;
+    background: white;
+    text-align: center;
+    font-size: larger;
+    font-weight: bold;
 }
 span {
     font-weight: bold;
-}
-form[name='CharStats'] div{
-    margin: 1%;
 }
 .wrapper {
     padding: 1%;
 }
 .wrapper h1, .wrapper h3 {
+    border-radius: 5px;
+    padding: 1%;
+    width: fit-content;
+    margin: 20px auto 20px auto;
     text-align: center;
-}
-.stats {
-    display: grid;
-    grid-template-columns: 1fr 3fr;
+    background-color: burlywood;
 }
 .stats input {
     text-align: center;
-    margin-bottom: inherit;
     max-width: 70px;
 }
-.stats, .buffs {
-    width: 50%;
+.stats > div{
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+}
+.centre {
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
 }

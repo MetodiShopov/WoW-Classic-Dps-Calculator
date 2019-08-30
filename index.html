@@ -13,56 +13,127 @@
 <body>
     <div class="wrapper">
         <h1>Classic DPS Calculator</h1>
-        <form name="CharStats" action="javascript:calculate_dps('raid_arc');">
-            <div>
-                <span>Choose a Class:</span>
-                <select name="class" id="chosen_class" disabled>
-                    <option value="mage">Mage</option>
-                    <option value="priest" disabled>Priest</option>
-                    <option value="priest" disabled>Warlock</option>
-                </select>
-            </div>
-            <div>
-                <span>Enemy LvL:</span>
-                <select name="enemy_lvl" id="enemy_lvl">
-                    <option value="63">Boss Level (63)</option>
-                    <option value="60">Player lvl (60)</option>
-                </select>
-            </div>
-            <h3>Character Stats</h3>
-            <div class="stats">
-                <label for="input_intelect">Intelect:</label>
-                <input type="number" id="input_intelect" required min="0" step="1" title="Positive integer">
-                <label for="input_spirit">Spirit:</label>
-                <input type="number" id="input_spirit" required min="0" step="1" title="Positive integer">
-                <label for="input_mana_per_5">Mana per 5 sec:</label>
-                <input type="number" id="input_mana_per_5" required min="0" step="1" title="Positive integer">
-                <label for="input_spell_dmg">Plus Spell Damage:</label>
-                <input type="number" id="input_spell_dmg" required min="0" step="1" title="Positive integer">
-                <label for="input_spell_hit">Spell Hit in %:</label>
-                <input type="number" id="input_spell_hit" required min="0" step="1" title="Positive integer">
-                <label for="input_spell_crit">Spell Crit in %:</label>
-                <input type="number" id="input_spell_crit" required min="0" step="1" title="Positive integer">
-            </div>
-            <div class="buffs">
-
-            </div>
-            <div>
-                <span>Talents Used:</spans>
+        <div class="centre">
+            <form name="CharStats" action="javascript:calculate_dps('raid_arc');">
+                <h3>
+                    <span>Choose a Class:</span>
+                    <select name="class" id="chosen_class" disabled>
+                        <option value="mage">Mage</option>
+                        <option value="priest" disabled>Priest</option>
+                        <option value="priest" disabled>Warlock</option>
+                    </select>
+                </h3>
+                <div>
+                    <span>Talents Used:</span>
                     <a target="_blank" rel="noopener noreferrer"
                         href="https://classicdb.ch/?talent#of0ycocquZVA0c0s">Link</a>
-            </div>
-            <div>
-                <span>Spell Used:</span>
-                <select name="spell" id="chosen_spell" disabled>
-                    <option value="frost_bolt">Frost Bolt</option>
-                </select>
-            </div>
-            <input class="submit" name="submit" type="submit" value="Calculate" />
-            <input type="reset" value="Reset">
-        </form>
-        <!-- <button onclick="calculate_dps('raid_arc')">Calculate</button> -->
-        <pre id="result"></pre>
+                </div>
+                <div>
+                    <span>Spell Used:</span>
+                    <select name="spell" id="chosen_spell" disabled>
+                        <option value="frost_bolt">Frost Bolt</option>
+                    </select>
+                </div>
+                <h2>Character Stats</h2>
+                <div class="char_stats">
+                    <div class="char_variables_group stats">
+                        <div>
+                            <label for="input_intelect">Intelect:</label>
+                            <input type="number" id="input_intelect" required min="0" step="1" title="Positive integer">
+                        </div>
+                        <div>
+                            <label for="input_spirit">Spirit:</label>
+                            <input type="number" id="input_spirit" required min="0" step="1" title="Positive integer">
+                        </div>
+                        <div>
+                            <label for="input_mana_per_5">Mana per 5 sec:</label>
+                            <input type="number" id="input_mana_per_5" required min="0" step="1"
+                                title="Positive integer">
+                        </div>
+                        <div>
+                            <label for="input_spell_dmg">Plus Spell Damage:</label>
+                            <input type="number" id="input_spell_dmg" required min="0" step="1"
+                                title="Positive integer">
+                        </div>
+                        <div>
+                            <label for="input_spell_hit">Spell Hit in %:</label>
+                            <input type="number" id="input_spell_hit" required min="0" step="1"
+                                title="Positive integer">
+                        </div>
+                        <div>
+                            <label for="input_spell_crit">Spell Crit in %:</label>
+                            <input type="number" id="input_spell_crit" required min="0" step="1"
+                                title="Positive integer">
+                        </div>
+                    </div>
+                    <!-- <div class="char_variables_group buffs">
+                        <input type="checkbox" name="Arcane_Intelect" id="arc_intelect" checked>
+                        <label for="arc_intelect">Arcane Intelect</label>
+                        <input type="checkbox" name="Mage_Armor" id="mage_armor" checked>
+                        <label for="mage_armor">Mage Armor</label>
+                        <input type="checkbox" name="MotW" id="motw">
+                        <label for="motw">Mark of the Wild</label>
+                        <input type="checkbox" name="BoK" id="blessing_kings">
+                        <label for="blessing_kings">Blessing of Kings</label>
+                        <input type="checkbox" name="BoW" id="blessing_wisdom">
+                        <label for="blessing_wisdom">Blessing of Wisodm</label>
+                        <input type="checkbox" name="Div_Spirit" id="divine_spirit">
+                        <label for="divine_spirit">Divine Spirit</label>
+                        <input type="checkbox" name="Mana_Spring_Totem" id="mana_spring_totem">
+                        <label for="mana_spring_totem">Mana Spring Totem</label>
+                        <input type="checkbox" name="Mana_Tide_Totem" id="mana_tide_totem">
+                        <label for="mana_tide_totem">Mana Tide Totem</label>
+                        <input type="checkbox" name="Rallying_Cry_Dragonslayer" id="rallying_cry_dragonslayer">
+                        <label for="rallying_cry_dragonslayer">Rallying Cry of the Dragonslayer</label>
+                        <input type="checkbox" name="Warchief_Blessing" id="warchief_blessing">
+                        <label for="warchief_blessing">Warchief's Blessing</label>
+                        <input type="checkbox" name="Songflower_Serenade" id="songflower_serenade">
+                        <label for="songflower_serenade">Songflower Serenade</label>
+                    </div>
+                    <div class="char_variables_group consumables">
+                        <input type="checkbox" name="Mana_Ruby" id="mana_gem" checked>
+                        <label for="mana_gem">Mana Ruby</label>
+                        <input type="checkbox" name="Major_Mana_Potion" id="major_mana_potion">
+                        <label for="major_mana_potion">Major Mana Potion</label>
+                        <input type="checkbox" name="Dark_Demonic_Rune" id="dark_demonic_rune">
+                        <label for="dark_demonic_rune">Dark/Demonic Rune</label>
+                        <input type="checkbox" name="Flask_Supreme_Power" id="flask_supreme_power">
+                        <label for="flask_supreme_power">Flask of Supreme Power</label>
+                        <input type="checkbox" name="Cerebral_Cortex_Compound" id="cerebral_cortex_compound">
+                        <label for="cerebral_cortex_compound">Cerebral Cortex Compound</label>
+                        <input type="checkbox" name="Gizzard_Gum" id="gizzard_gum">
+                        <label for="gizzard_gum">Gizzard Gum</label>
+                        <input type="checkbox" name="Mageblood_Potion" id="mageblood_potion">
+                        <label for="mageblood_potion">Mageblood Potion</label>
+                        <input type="checkbox" name="Greater_Arcane_Elixir" id="greater_arcane_elixir">
+                        <label for="greater_arcane_elixir">Greater Arcane Elixir</label>
+                        <input type="checkbox" name="Elixir_Frost_Power" id="elixir_frost_power">
+                        <label for="elixir_frost_power">Elixir of Frost Power</label>
+                        <input type="checkbox" name="Elixir_Greater_Firepower" id="elixir_greater_firepower">
+                        <label for="elixir_greater_firepower">Elixir of Greater Firepower</label>
+        
+                        <input type="radio" name="food_buff" id="nightfin_soup">
+                        <label for="nightfin_soup">Nightfin Soup</label>
+                        <input type="radio" name="food_buff" id="runn_tum_tuber_surprise">
+                        <label for="runn_tum_tuber_surprise">Runn Tum Tuber Surprise</label>
+                        <input type="radio" name="food_buff" id="blessed_sunfruit_juice">
+                        <label for="blessed_sunfruit_juice">Blessed Sunfruit Juice</label>
+                    </div> -->
+                </div>
+                <h2>
+                    <span>Enemy LvL:</span>
+                    <select name="enemy_lvl" id="enemy_lvl">
+                        <option value="63">Boss (63)</option>
+                        <option value="60">Player (60)</option>
+                    </select>
+                </h2>
+                <div>
+                    <input class="submit" name="submit" type="submit" value="Calculate" />
+                    <input type="reset" value="Reset">
+                </div>
+            </form>
+            <pre id="result">RESULTS:</pre>
+        </div>
     </div>
 </body>
 
