@@ -1,12 +1,12 @@
 // On Load set BIS before MC stats
-window.onload = function () {
-    document.getElementById('input_intelect').value = 283;
-    document.getElementById('input_spirit').value = 194;
-    document.getElementById('input_mana_per_5').value = 8;
-    document.getElementById('input_spell_dmg').value = 220;
-    document.getElementById('input_spell_hit').value = 2;
-    document.getElementById('input_spell_crit').value = 3;
-}
+// window.onload = function () {
+//     document.getElementById('input_intelect').value = 283;
+//     document.getElementById('input_spirit').value = 194;
+//     document.getElementById('input_mana_per_5').value = 8;
+//     document.getElementById('input_spell_dmg').value = 220;
+//     document.getElementById('input_spell_hit').value = 2;
+//     document.getElementById('input_spell_crit').value = 3;
+// }
 
 let character_stats = {};
 
@@ -54,7 +54,6 @@ const spells = {
     }
 }
 
-
 function get_input() {
     character_stats = {};
     character_stats.enemy_lvl = Number(document.getElementById('enemy_lvl').value);
@@ -75,13 +74,12 @@ function create_character_stats() {
     // Adding Crit chance from base and intelecct
     character_stats.crit_chance += (5 + Math.round(character_stats.intelect / 59.5));
 }
-
 function calculate_dps(spec) {
     get_input();
     create_character_stats();
 
     let result = document.getElementById('result');
-    result.textContent = 'RESULTS:\n';
+    result.innerHTML = '<h3>RESULTS:</h3>';
 
     // Using Mage Armor + Arcane Intelect + Mana Ruby
     character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.3;
@@ -109,7 +107,7 @@ function calculate_dps(spec) {
         spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
         character_stats.crit_chance += 3;
 
-        fight(spell_cast_time, Math.round(spell_dmg_per_cast), spell_cost, spell_crit_multiplier);
+        // fight(spell_cast_time, Math.round(spell_dmg_per_cast), spell_cost, spell_crit_multiplier);
 
         // spell - Frostbolt
         let frostbolt_cast_time = 2.5;
@@ -248,7 +246,6 @@ function calculate_dps(spec) {
         let total_dmg = 0;
 
         // Fire not working with new stats: character_stats
-        // Check Enemy LvL - hit chance
         if (spec === 'fire') {
             while (character_current_mana > 0) {
                 let scorch_timer = 0
@@ -285,9 +282,9 @@ function calculate_dps(spec) {
                 while (character_current_mana > 0) {
                     let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
                     // Calculating if it Hits
-                    if (roll_if_success(hit_percent)) {
+                    if (successful_roll(hit_percent)) {
                         // Calculating if it Crits
-                        if (roll_if_success(character_stats.crit_chance)) {
+                        if (successful_roll(character_stats.crit_chance)) {
                             total_dmg += dmg * crit_multiplier;
                         } else {
                             total_dmg += dmg;
@@ -302,15 +299,15 @@ function calculate_dps(spec) {
         }
 
         printResult(total_dmg / 500, time_in_seconds / 500);
-
-        console.log(`Specialisation - ${spec.toUpperCase()}`);
-        console.log(`Total damage done: ${total_dmg} `);
-        console.log(`Damage Per Second: ${Math.round(total_dmg / time_in_seconds)} `);
-        console.log(`Time elapsed: ${time_in_seconds} \n`);
     }
 
     function printResult(total, seconds) {
-        result.textContent += `Specialisation - ${spec.toUpperCase()}\nTotal damage done: ${Math.round(total)}\nDamage Per Second: ${Math.round(total / seconds)}\nTime elapsed: ${seconds}\n\n`;
+        result.innerHTML = '<h3>RESULTS:</h3>';
+        result.innerHTML += `<div class="result_box">
+                            <h4>Total damage done: ${Math.round(total)}</h4>
+                            <h3>Damage Per Second: ${Math.round(total / seconds)}</h3>
+                            <h4>Time elapsed: ${seconds}</h4>
+                            </div>`;
     };
 
     function check_correct_hit_chance(char_hit, enemy_lvl) {
@@ -330,7 +327,7 @@ function calculate_dps(spec) {
         return num
     };
 
-    function roll_if_success(chance) {
+    function successful_roll(chance) {
         let roll = Math.floor(Math.random() * 100) + 1;
 
         if (roll <= chance) {

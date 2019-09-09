@@ -1,12 +1,13 @@
 body{
     /* background-image: url('wow_classic_ragnaros_1920x1080.jpg'); */
-    background-image: url('https://bnetcmsus-a.akamaihd.net/cms/template_resource/NABVOYB8JXDV1556236141640.jpg');
+    background-image: url(images/background_hippogryph.jpg);
     background-size: cover;
-    background-repeat: no-repeat;
+    /* background-repeat: no-repeat; */
 }
 form{
+    border-radius: 10px;
+    margin-right: 1%;
     width: 250px;
-    /* margin: auto; */
     padding: 2%;
     background-color: burlywood;
     /* opacity: 0.9; */
@@ -17,11 +18,12 @@ form{
 form[name='CharStats'] div{
     margin: 5px;
 }
-pre {
+#result {
+    border-radius: 10px;
     width: 250px;
     margin: 0;
     padding: 2%;
-    background: white;
+    background: burlywood;
     text-align: center;
     font-size: larger;
     font-weight: bold;
@@ -53,4 +55,8 @@ span {
     border-radius: 20px;
     display: flex;
     justify-content: center;
+}
+.result_box {
+    background-color: white;
+    border: 1px solid black;
 }

@@ -8,11 +8,12 @@
     <title>Mage DPS Calculator</title>
     <link rel="stylesheet" href="style.css">
     <script src="mage_dps.js"></script>
+    <link rel="shortcut icon" href="images/WoW_engineering.jpg" type="image/x-icon">
 </head>
 
 <body>
     <div class="wrapper">
-        <h1>Classic DPS Calculator</h1>
+        <h1>WoW Classic DPS Calculator</h1>
         <div class="centre">
             <form name="CharStats" action="javascript:calculate_dps('raid_arc');">
                 <h3>
@@ -20,7 +21,7 @@
                     <select name="class" id="chosen_class" disabled>
                         <option value="mage">Mage</option>
                         <option value="priest" disabled>Priest</option>
-                        <option value="priest" disabled>Warlock</option>
+                        <option value="warlock" disabled>Warlock</option>
                     </select>
                 </h3>
                 <div>
@@ -39,7 +40,8 @@
                     <div class="char_variables_group stats">
                         <div>
                             <label for="input_intelect">Intelect:</label>
-                            <input type="number" id="input_intelect" required min="0" step="1" title="Positive integer">
+                            <input type="number" id="input_intelect" required min="0" step="1" title="Positive integer"
+                                autofocus>
                         </div>
                         <div>
                             <label for="input_spirit">Spirit:</label>
@@ -120,19 +122,21 @@
                         <label for="blessed_sunfruit_juice">Blessed Sunfruit Juice</label>
                     </div> -->
                 </div>
-                <h2>
+                <h3>
                     <span>Enemy LvL:</span>
                     <select name="enemy_lvl" id="enemy_lvl">
                         <option value="63">Boss (63)</option>
                         <option value="60">Player (60)</option>
                     </select>
-                </h2>
+                </h3>
                 <div>
                     <input class="submit" name="submit" type="submit" value="Calculate" />
                     <input type="reset" value="Reset">
                 </div>
             </form>
-            <pre id="result">RESULTS:</pre>
+            <div id="result" disabled>
+                <h3>RESULTS:</h3>
+            </div>
         </div>
     </div>
 </body>

@@ -18,9 +18,10 @@
     - Option to add FireBlast dps
     - Option to add Evocation
     - Math.Random for Spell dmg
+    - Clearcasting Ramdom Prock
     - Add Spell Rank option ?
     - Add All Spell info??
-    - Missing Buffs
+    - Missing Buffs, ZG,DM...
 - Add Login to save Character Stats
     - 3 or 5 Characters
 - Add caster DPSes 
