@@ -1,16 +1,30 @@
 body{
-    /* background-image: url('wow_classic_ragnaros_1920x1080.jpg'); */
     background-image: url(images/background_hippogryph.jpg);
     background-size: cover;
-    /* background-repeat: no-repeat; */
+}
+.wrapper {
+    padding: 1%;
+}
+.wrapper h1, .wrapper h3, footer {
+    border-radius: 5px;
+    padding: 1%;
+    width: fit-content;
+    margin: 20px auto 20px auto;
+    text-align: center;
+    background-color: burlywood;
+}
+main h1:first-of-type {
+    border: 2px solid #131211;
+}
+footer{
+    border: 2px solid #131211;
 }
 form{
     border-radius: 10px;
     margin: 1%;
     width: 250px;
-    padding: 2%;
+    padding: 1%;
     background-color: burlywood;
-    /* opacity: 0.9; */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -18,7 +32,7 @@ form{
 form[name='CharStats'] div{
     margin: 5px;
 }
-form .buttons{
+form .buttons, form .spell_sepect{
     width: 100%;
     text-align: center;
 }
@@ -31,30 +45,24 @@ form[name='CharStats'] input[type='submit'], form[name='CharStats'] input[type='
     padding: 4%;
     color: #FFC700;
     background-image: radial-gradient(#7F0D08, #2E0503);
-}
-#result {
-    border-radius: 10px;
-    width: 250px;
-    margin: 1%;
-    padding: 2%;
-    background: burlywood;
-    text-align: center;
-    font-size: larger;
-    font-weight: bold;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 form span {
     font-weight: bold;
 }
-.wrapper {
+form select{
     padding: 1%;
 }
-.wrapper h1, .wrapper h3, .wrapper footer {
-    border-radius: 5px;
+#result {
+    border: 2px solid #131211;
+    border-radius: 10px;
+    width: 250px;
+    margin: 1%;
     padding: 1%;
-    width: fit-content;
-    margin: 20px auto 20px auto;
+    background: burlywood;
     text-align: center;
-    background-color: burlywood;
+    font-size: larger;
+    font-weight: bold;
 }
 .stats input {
     text-align: center;
@@ -71,7 +79,13 @@ form span {
     justify-content: center;
     flex-wrap: wrap;
 }
+.centred form:first-of-type{
+    border: 2px solid #131211;
+}
 .result_box {
     background-color: white;
-    border: 1px solid black;
+    border: 2px solid #131211;
+    border-radius: 5px;
+    padding: 4%;
+    margin: 4%;
 }

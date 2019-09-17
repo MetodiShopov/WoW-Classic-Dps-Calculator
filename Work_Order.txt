@@ -7,7 +7,6 @@
     - Look for Free images
 - Upload to Server
     - Protect code
-    - catchy name
 - Landing Page - DPS calc/ About Page(contacts) / News and Future updates
     - info for future classes on hover
 - Paypal support the developer + email for contacts

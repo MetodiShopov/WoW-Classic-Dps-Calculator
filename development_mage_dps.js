@@ -1,13 +1,3 @@
-// On Load set BIS before MC stats
-// window.onload = function () {
-//     document.getElementById('input_intelect').value = 283;
-//     document.getElementById('input_spirit').value = 194;
-//     document.getElementById('input_mana_per_5').value = 8;
-//     document.getElementById('input_spell_dmg').value = 220;
-//     document.getElementById('input_spell_hit').value = 2;
-//     document.getElementById('input_spell_crit').value = 3;
-// }
-
 let character_stats = {};
 
 // Mage Spell Info before Dire Maul
@@ -18,7 +8,7 @@ const spells = {
         dmg: (429 + 464) / 2,
         cost: 260,
         cast_time: 3,
-        add_spd: function () {
+        add_spell_damage: function () {
             return this.dmg + (character_stats.spell_dmg * 0.814)
         }
     },
@@ -28,7 +18,7 @@ const spells = {
         dmg: 192 * 5,
         cost: 595,
         cast_time: 5,
-        add_spd: function () {
+        add_spell_damage: function () {
             return this.dmg + character_stats.spell_dmg
         }
     },
@@ -38,7 +28,7 @@ const spells = {
         dmg: (561 + 716) / 2,
         cost: 395,
         cast_time: 3.5,
-        add_spd: function () {
+        add_spell_damage: function () {
             return this.dmg + character_stats.spell_dmg
         }
     },
@@ -48,7 +38,7 @@ const spells = {
         dmg: (233 + 276) / 2,
         cost: 150,
         cast_time: 1.5,
-        add_spd: function () {
+        add_spell_damage: function () {
             return this.dmg + character_stats.spell_dmg
         }
     }
@@ -56,13 +46,13 @@ const spells = {
 
 function get_input() {
     character_stats = {};
-    character_stats.enemy_lvl = Number(document.getElementById('enemy_lvl').value);
     character_stats.intelect = Number(document.getElementById('input_intelect').value);
     character_stats.spirit = Number(document.getElementById('input_spirit').value);
     character_stats.mana_per_5 = Number(document.getElementById('input_mana_per_5').value);
     character_stats.spell_dmg = Number(document.getElementById('input_spell_dmg').value);
     character_stats.hit_chance = Number(document.getElementById('input_spell_hit').value);
     character_stats.crit_chance = Number(document.getElementById('input_spell_crit').value);
+    character_stats.enemy_lvl = Number(document.getElementById('enemy_lvl').value);
 };
 
 function create_character_stats() {
@@ -242,8 +232,11 @@ function calculate_dps(spec) {
     }
 
     function fight(cast_time, dmg, cost, crit_multiplier) {
+        let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
         let time_in_seconds = 0;
         let total_dmg = 0;
+        let is_arc_power_on = false;
+        let arc_power_timer = 0;
 
         // Fire not working with new stats: character_stats
         if (spec === 'fire') {
@@ -280,25 +273,44 @@ function calculate_dps(spec) {
             for (let i = 0; i < 500; i++) {
                 let character_current_mana = character_stats.max_mana;
                 while (character_current_mana > 0) {
-                    let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
+                    // Cast Arcane Power
+                    if (time_in_seconds % 180 === 0) {
+                        is_arc_power_on = true;
+                        arc_power_timer = 15;
+                    }
+
                     // Calculating if it Hits
                     if (successful_roll(hit_percent)) {
                         // Calculating if it Crits
                         if (successful_roll(character_stats.crit_chance)) {
-                            total_dmg += dmg * crit_multiplier;
+                            if (is_arc_power_on && arc_power_timer > 0) {
+                                total_dmg += dmg * crit_multiplier * 1.3;
+                                character_current_mana -= cost * 1.3;
+                            } else {    
+                                total_dmg += dmg * crit_multiplier;
+                                character_current_mana -= cost;
+                            }
                         } else {
-                            total_dmg += dmg;
+                            if (is_arc_power_on && arc_power_timer > 0) {
+                                total_dmg += dmg * 1.3;
+                                character_current_mana -= cost * 1.3;
+                            } else {
+                                total_dmg += dmg;
+                                character_current_mana -= cost;
+                            }
                         }
-                    };
+                    } else{
+                        character_current_mana -= cost;
+                    }
 
+                    arc_power_timer -= cast_time;
                     time_in_seconds += cast_time;
                     character_current_mana += (character_stats.in_combat_mana_regen * cast_time)
-                    character_current_mana -= cost;
                 }
             }
         }
 
-        printResult(total_dmg / 500, time_in_seconds / 500);
+        printResult(total_dmg / 500, Math.round(time_in_seconds / 500));
     }
 
     function printResult(total, seconds) {
@@ -311,20 +323,20 @@ function calculate_dps(spec) {
     };
 
     function check_correct_hit_chance(char_hit, enemy_lvl) {
-        let num = 96 + char_hit;
+        let hit_chance = 96 + char_hit;
         // Calc. hit chance and enemy lvl
         if (enemy_lvl === 63) {
-            num -= 13;
-            if (num > 99) {
-                num = 99
+            hit_chance -= 13;
+            if (hit_chance > 99) {
+                hit_chance = 99
             }
         } else {
-            if (num > 99) {
-                num = 99
+            if (hit_chance > 99) {
+                hit_chance = 99
             }
         }
 
-        return num
+        return hit_chance
     };
 
     function successful_roll(chance) {
@@ -347,4 +359,3 @@ function calculate_dps(spec) {
 // - Spirit tick on 2 sec
 // - Add FireBlast casting option
 // - Random spell Dmg?
-// Char Mana isnt based only on int!
