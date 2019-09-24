@@ -21,8 +21,8 @@ footer{
 }
 form{
     border-radius: 10px;
-    margin: 1%;
     width: 250px;
+    margin: 1%;
     padding: 1%;
     background-color: burlywood;
     display: flex;
@@ -32,7 +32,7 @@ form{
 form[name='CharStats'] div{
     margin: 5px;
 }
-form .buttons, form .spell_sepect{
+form .buttons, form .spell_select{
     width: 100%;
     text-align: center;
 }
@@ -47,22 +47,26 @@ form[name='CharStats'] input[type='submit'], form[name='CharStats'] input[type='
     background-image: radial-gradient(#7F0D08, #2E0503);
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
-form span {
+form span, #evocation_div label{
     font-weight: bold;
 }
 form select{
     padding: 1%;
 }
-#result {
+#result, #about{
     border: 2px solid #131211;
     border-radius: 10px;
     width: 250px;
     margin: 1%;
     padding: 1%;
-    background: burlywood;
+    background-color: burlywood;
     text-align: center;
     font-size: larger;
     font-weight: bold;
+}
+#about{
+    text-align: start;
+    font-size: medium;
 }
 .stats input {
     text-align: center;
@@ -82,7 +86,7 @@ form select{
 .centred form:first-of-type{
     border: 2px solid #131211;
 }
-.result_box {
+.text_box {
     background-color: white;
     border: 2px solid #131211;
     border-radius: 5px;

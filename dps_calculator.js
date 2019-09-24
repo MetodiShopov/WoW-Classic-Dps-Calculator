@@ -2,13 +2,14 @@ let character_stats = {};
 
 function get_input() {
     character_stats = {};
-    character_stats.intelect = Number(document.getElementById('input_intelect').value);
+    character_stats.intelect = Number(document.getElementById('input_intellect').value);
     character_stats.spirit = Number(document.getElementById('input_spirit').value);
     character_stats.mana_per_5 = Number(document.getElementById('input_mana_per_5').value);
     character_stats.spell_dmg = Number(document.getElementById('input_spell_dmg').value);
     character_stats.hit_chance = Number(document.getElementById('input_spell_hit').value);
     character_stats.crit_chance = Number(document.getElementById('input_spell_crit').value);
     character_stats.enemy_lvl = Number(document.getElementById('enemy_lvl').value);
+    character_stats.evocation_enabled = document.getElementById('input_evocation').checked;
 };
 
 function create_character_stats() {
@@ -57,10 +58,10 @@ function calculate_dps(spec) {
         // Winter's Chill 5/5 from other player
         character_stats.crit_chance += 10;
 
-        fight(frostbolt_cast_time, Math.round(frostbolt_dmg_per_cast), frostbolt_cost, frostbolt_crit_multiplier);
+        attack_enemy(frostbolt_cast_time, Math.round(frostbolt_dmg_per_cast), frostbolt_cost, frostbolt_crit_multiplier);
     }
 
-    function fight(cast_time, dmg, cost, crit_multiplier) {
+    function attack_enemy(cast_time, dmg, cost, crit_multiplier) {
         let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
         let time_in_seconds = 0;
         let total_dmg = 0;
@@ -69,7 +70,8 @@ function calculate_dps(spec) {
 
         for (let i = 0; i < 500; i++) {
             let character_current_mana = character_stats.max_mana;
-            while (character_current_mana > 0) {
+            let evocation_used = character_stats.evocation_enabled;
+            while (character_current_mana >= cost) {
                 // Cast Arcane Power
                 if (time_in_seconds % 180 === 0) {
                     is_arc_power_on = true;
@@ -103,6 +105,17 @@ function calculate_dps(spec) {
                 arc_power_timer -= cast_time;
                 time_in_seconds += cast_time;
                 character_current_mana += (character_stats.in_combat_mana_regen * cast_time)
+
+                // Check if Evocation should be used
+                if (character_current_mana < cost && evocation_used) {
+                    // Casting Evocation
+                    evocation_used = false;
+                    character_current_mana = character_stats.out_of_combat_mana_regen_per_sec * 8 * 15;
+                    if (character_current_mana > character_stats.max_mana) {
+                        character_current_mana = character_stats.max_mana;
+                    }
+                    time_in_seconds += 8;
+                }
             }
         }
 
@@ -112,7 +125,7 @@ function calculate_dps(spec) {
 
     function printResult(total, seconds) {
         result.innerHTML = '<h3>RESULTS:</h3>';
-        result.innerHTML += `<div class="result_box">
+        result.innerHTML += `<div class="text_box">
                             <h4>Total damage done: ${Math.round(total)}</h4>
                             <h3>Damage Per Second: ${Math.round(total / seconds)}</h3>
                             <h4>Time elapsed: ${seconds}</h4>

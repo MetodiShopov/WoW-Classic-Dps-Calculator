@@ -8,13 +8,14 @@
     <title>WoW Classic DPS Calculator</title>
     <link rel="stylesheet" href="style.css">
     <script src="dps_calculator.js"></script>
-
+    <meta name="google-site-verification" content="Oh-l_KBd_LpWIG3LF_hBzo7p73atmB2UcLi1ySgMoS8" />
     <meta property="og:title" content="WoW Classic DPS Calculator" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://www.wowclassicdpscalculator.com/" />
     <meta property="og:image" content="https://www.wowclassicdpscalculator.com/images/WoW_engineering.jpg" />
     <meta property="og:description"
         content="A Class Damage Calculator dedicated to the game World of Warcraft Classic" />
+    <meta name="keywords" content="World of Warcraft, WoW, Classic, DPS, Calculator, mage">
     <meta property="og:determiner" content="a" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="56" />
@@ -41,20 +42,14 @@
                     <div>
                         <span>Talents Used:</span>
                         <a target="_blank" rel="noopener noreferrer"
-                            href="https://classicdb.ch/?talent#of0ycocquZVA0c0s">Link</a>
+                            href="https://classic.wowhead.com/talent-calc/mage/2300450310031531--053500030013">Link</a>
                     </div>
-                    <div class="spell_sepect">
-                        <span>Spell Used:</span>
-                        <select name="spell" id="chosen_spell" disabled>
-                            <option value="frost_bolt">Frost Bolt</option>
-                        </select>
-                    </div>
-                    <h2>Character Stats</h2>
+                    <h2>Character Attributes</h2>
                     <div class="char_stats">
                         <div class="char_variables_group stats">
                             <div>
-                                <label for="input_intelect">Intelect:</label>
-                                <input type="number" id="input_intelect" required min="0" step="1"
+                                <label for="input_intellect">Intellect:</label>
+                                <input type="number" id="input_intellect" required min="0" step="1"
                                     title="Positive integer" placeholder="283" autofocus>
                             </div>
                             <div>
@@ -137,6 +132,16 @@
                                 <label for="blessed_sunfruit_juice">Blessed Sunfruit Juice</label>
                             </div> -->
                     </div>
+                    <div class="spell_select">
+                        <span>Spell Used:</span>
+                        <select name="spell" id="chosen_spell" disabled>
+                            <option value="frost_bolt">Frost Bolt</option>
+                        </select>
+                    </div>
+                    <div id="evocation_div">
+                        <label for="input_evocation">Use Evocation:</label>
+                        <input type="checkbox" name="Evocation" id="input_evocation" checked>
+                    </div>
                     <h3>
                         <span>Enemy LvL:</span>
                         <select name="enemy_lvl" id="enemy_lvl">
@@ -151,6 +156,16 @@
                 </form>
                 <div id="result">
                     <h3>RESULTS:</h3>
+                </div>
+                <div id="about">
+                    <h3>How is it calculated:</h3>
+                    <div class="text_box">
+                        <p>Rotation used: Arcane Power on cool down and casts only Frostbolt Rank 10 at level 60.</p>
+                        <p>The calculation creates a character using the given attributes.</p>
+                        <p>Then simulates a fight against the chosen enemy.</p>
+                        <p>The simulation ends when the character has no more mana to cast Frostbolt. The sequence is
+                            repeated 500 times and prints the average numbers.</p>
+                    </div>
                 </div>
             </div>
         </main>

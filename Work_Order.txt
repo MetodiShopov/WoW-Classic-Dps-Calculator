@@ -15,7 +15,6 @@
     - fetch from Classicdb.ch ??
 - Improve DPS calculations
     - Option to add FireBlast dps
-    - Option to add Evocation
     - Math.Random for Spell dmg
     - Clearcasting Ramdom Prock
     - Add Spell Rank option ?
