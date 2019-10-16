@@ -13,12 +13,12 @@ function get_input() {
 };
 
 function create_character_stats() {
-    character_stats.max_mana = (character_stats.intelect * 15) + 933;
+    character_stats.max_mana = ((character_stats.intelect - 121) * 15) + 2748;
     character_stats.in_combat_mana_regen = character_stats.mana_per_5 / 5;
     // Calculate regeneretion from Spirit
     character_stats.mana_regen_from_spirit = (13 + (character_stats.spirit / 4)) / 2;
     character_stats.out_of_combat_mana_regen_per_sec = character_stats.mana_regen_from_spirit;
-    // Adding Crit chance from base and intelecct
+    // Adding Crit chance from base and intelect
     character_stats.crit_chance += (5 + Math.round(character_stats.intelect / 59.5));
 }
 function calculate_dps(spec) {
@@ -28,10 +28,9 @@ function calculate_dps(spec) {
     let result = document.getElementById('result');
     result.innerHTML = '<h3>RESULTS:</h3>';
 
-    // Using Mage Armor + Arcane Intelect + Mana Ruby
+    // Using Mage Armor + Arcane Intelect
     character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.3;
     character_stats.max_mana += 31 * 15;
-    character_stats.max_mana += 1100;
 
     if (spec === 'raid_arc') {
         // spell - Frostbolt
@@ -65,17 +64,25 @@ function calculate_dps(spec) {
         let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
         let time_in_seconds = 0;
         let total_dmg = 0;
-        let is_arc_power_on = false;
-        let arc_power_timer = 0;
 
         for (let i = 0; i < 500; i++) {
             let character_current_mana = character_stats.max_mana;
             let evocation_used = character_stats.evocation_enabled;
+            let is_arc_power_on = false;
+            let arc_power_timer = 0;
+            let mana_ruby_used = false;
+
             while (character_current_mana >= cost) {
                 // Cast Arcane Power
                 if (time_in_seconds % 180 === 0) {
                     is_arc_power_on = true;
                     arc_power_timer = 15;
+                }
+
+                // Using Mana Ruby
+                if (!mana_ruby_used && character_current_mana <= (character_stats.max_mana - 1100)) {
+                    character_current_mana += 1100;
+                    mana_ruby_used = true;
                 }
 
                 // Calculating if it Hits
@@ -118,8 +125,6 @@ function calculate_dps(spec) {
                 }
             }
         }
-
-
         printResult(total_dmg / 500, Math.round(time_in_seconds / 500));
     }
 
@@ -128,7 +133,7 @@ function calculate_dps(spec) {
         result.innerHTML += `<div class="text_box">
                             <h4>Total damage done: ${Math.round(total)}</h4>
                             <h3>Damage Per Second: ${Math.round(total / seconds)}</h3>
-                            <h4>Time elapsed: ${seconds}</h4>
+                            <h4>Time elapsed: ${seconds} sec</h4>
                             </div>`;
     };
 
