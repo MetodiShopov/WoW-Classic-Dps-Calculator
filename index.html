@@ -21,20 +21,22 @@
     <meta property="og:image:width" content="56" />
     <meta property="og:image:height" content="56" />
     <meta property="og:image:alt" content="A yellow gear wheel" />
-
     <link rel="shortcut icon" href="images/WoW_engineering.jpg" type="image/x-icon">
 </head>
 
 <body>
     <div class="wrapper">
-        <main>
+        <header>
             <h1>WoW Classic DPS Calculator</h1>
+        </header>
+        <main>
             <div class="centred">
                 <form name="CharStats" action="javascript:calculate_dps('raid_arc');">
                     <h3>
                         <span>60 Level Class:</span>
-                        <select name="class" id="chosen_class" disabled>
+                        <select name="class" id="chosen_class">
                             <option value="mage">Mage</option>
+                            <option value="shaman" disabled>Shaman</option>
                             <option value="priest" disabled>Priest</option>
                             <option value="warlock" disabled>Warlock</option>
                         </select>
@@ -68,12 +70,12 @@
                                     title="Positive integer" placeholder="220">
                             </div>
                             <div>
-                                <label for="input_spell_hit">Spell Hit in %:</label>
+                                <label for="input_spell_hit">Spell Hit from gear:</label>
                                 <input type="number" id="input_spell_hit" required min="0" step="1"
                                     title="Positive integer" placeholder="2">
                             </div>
                             <div>
-                                <label for="input_spell_crit">Spell Crit in %:</label>
+                                <label for="input_spell_crit">Spell Crit from gear:</label>
                                 <input type="number" id="input_spell_crit" required min="0" step="1"
                                     title="Positive integer" placeholder="3">
                             </div>
@@ -134,8 +136,10 @@
                     </div>
                     <div class="spell_select">
                         <span>Spell Used:</span>
-                        <select name="spell" id="chosen_spell" disabled>
+                        <select name="spell" id="chosen_spell">
+                            <option value="arcane_missiles" disabled>Arcane Missiles</option>
                             <option value="frost_bolt">Frost Bolt</option>
+                            <option value="fire_ball" disabled>Fire Bolt</option>
                         </select>
                     </div>
                     <div id="evocation_div">
@@ -160,18 +164,18 @@
                 <div id="about">
                     <h3>How is it calculated:</h3>
                     <div class="text_box">
-                        <p>Rotation used: Arcane Power on cool down and casts only Frostbolt Rank 10 at level 60.</p>
+                        <p>Rotation used: Arcane Power on cool down and casts only Frostbolt Rank 10 as character level
+                            60.</p>
                         <p>The calculation creates a character using the given attributes.</p>
                         <p>Then simulates a fight against the chosen enemy.</p>
-                        <p>The simulation ends when the character has no more mana to cast Frostbolt. The sequence is
+                        <p>The simulation ends when the character has no more mana to cast his spells. The sequence is
                             repeated 500 times and prints the average numbers.</p>
                     </div>
                 </div>
             </div>
         </main>
         <footer>
-            <p>Keep in mind this is <span>Work in Progress</span></p>
-            <p><span>Feedback is always welcome at: </span><a
+            <p>Keep in mind this is Work in Progress<br>Feedback is always welcome at: <a
                     href="mailto:shopov.metodi@gmail.com">shopov.metodi@gmail.com</a>.</p>
             <p>Created by Metodi Shopov © 2019</p>
         </footer>
