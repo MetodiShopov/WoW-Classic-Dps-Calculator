@@ -1,32 +1,64 @@
 let character_stats = {};
+let talents_chosen;
+let chosen_spell;
 
-// Mage Spell Info before Dire Maul
+// Mage Spell
 const spells = {
     // FrostBolt Rank 10
-    frost_bolt: {
-        name: 'Frostbolt',
-        dmg: (429 + 464) / 2,
+    frost_bolt_10: {
+        name: 'Frostbolt R10',
+        dmg: (440 + 475) / 2,
         cost: 260,
         cast_time: 3,
         add_spell_damage: function () {
             return this.dmg + (character_stats.spell_dmg * 0.814)
         }
     },
+    // FrostBolt Rank 11
+    frost_bolt_11: {
+        name: 'Frostbolt R11',
+        dmg: (515 + 555) / 2,
+        cost: 290,
+        cast_time: 3,
+        add_spell_damage: function () {
+            return this.dmg + (character_stats.spell_dmg * 0.814)
+        }
+    },
     // Arcane Missiles Rank 7
-    arcane_missiles: {
-        name: 'Arcane Missiles',
-        dmg: 192 * 5,
+    arcane_missiles_7: {
+        name: 'Arcane Missiles R7',
+        dmg: 196 * 5,
         cost: 595,
         cast_time: 5,
         add_spell_damage: function () {
             return this.dmg + character_stats.spell_dmg
         }
     },
-    // Fire Ball Rank 11
-    fire_ball: {
-        name: 'Fire Ball',
-        dmg: (561 + 716) / 2,
+    // Arcane Missiles Rank 8
+    arcane_missiles_8: {
+        name: 'Arcane Missiles R8',
+        dmg: 230 * 5,
+        cost: 655,
+        cast_time: 5,
+        add_spell_damage: function () {
+            return this.dmg + character_stats.spell_dmg
+        }
+    },
+    // Fireball Rank 11
+    fireball_11: {
+        name: 'Fireball R11',
+        dmg: (561 + 715) / 2,
         cost: 395,
+        cast_time: 3.5,
+        add_spell_damage: function () {
+            return this.dmg + character_stats.spell_dmg
+        }
+    },
+    // Fireball Rank 12
+    fireball_12: {
+        name: 'Fireball R12',
+        dmg: (596 + 760) / 2,
+        cost: 410,
         cast_time: 3.5,
         add_spell_damage: function () {
             return this.dmg + character_stats.spell_dmg
@@ -35,7 +67,7 @@ const spells = {
     // Scorch Rank 7
     scorch: {
         name: 'Scorch',
-        dmg: (233 + 276) / 2,
+        dmg: (237 + 280) / 2,
         cost: 150,
         cast_time: 1.5,
         add_spell_damage: function () {
@@ -43,236 +75,277 @@ const spells = {
         }
     }
 }
+function talent_html() {
+    let selected_spec = document.getElementById("chosen_talents").value;
+    let a_element = document.getElementById("talent_link");
+    let form_action_script = document.getElementById("calculation_form");
+    let spell_usead = document.getElementById('chosen_spell');
+    switch (selected_spec) {
+        case "Arc_frost":
+            a_element.href = 'https://classic.wowhead.com/talent-calc/mage/2300450310031531--053500030013'
+            form_action_script.action = "javascript:calculate_dps('Arc_frost');";
+            spell_usead.value = "frost_bolt_11";
+            break;
+        case "Arc_fire":
+            a_element.href = 'https://classic.wowhead.com/talent-calc/mage/2300450310031531-5050020123';
+            form_action_script.action = "javascript:calculate_dps('Arc_fire');";
+            spell_usead.value = "fireball_12";
+            break;
+        case "Fire":
+            a_element.href = 'https://classic.wowhead.com/talent-calc/mage/230025030003-5050020123033151-002'
+            form_action_script.action = "javascript:calculate_dps('Fire');";
+            spell_usead.value = "fireball_12";
+            break;
+        case "Frost":
+            a_element.href = 'https://classic.wowhead.com/talent-calc/mage/230025030003--05350003002301351'
+            form_action_script.action = "javascript:calculate_dps('Frost');";
+            spell_usead.value = "frost_bolt_11";
+            break;
+        default:
+            break;
+    }
+}
 
 function get_input() {
-    character_stats = {};
-    character_stats.intelect = Number(document.getElementById('input_intelect').value);
+    character_stats.intellect = Number(document.getElementById('input_intellect').value);
     character_stats.spirit = Number(document.getElementById('input_spirit').value);
     character_stats.mana_per_5 = Number(document.getElementById('input_mana_per_5').value);
     character_stats.spell_dmg = Number(document.getElementById('input_spell_dmg').value);
     character_stats.hit_chance = Number(document.getElementById('input_spell_hit').value);
     character_stats.crit_chance = Number(document.getElementById('input_spell_crit').value);
     character_stats.enemy_lvl = Number(document.getElementById('enemy_lvl').value);
+    talents_chosen = document.getElementById('chosen_talents').value;
+    chosen_spell = document.getElementById('chosen_spell').value;
 };
 
 function create_character_stats() {
-    character_stats.max_mana = (character_stats.intelect * 15) + 933;
+    character_stats.max_mana = (character_stats.intellect * 15) + 933;
     character_stats.in_combat_mana_regen = character_stats.mana_per_5 / 5;
     // Calculate regeneretion from Spirit
     character_stats.mana_regen_from_spirit = (13 + (character_stats.spirit / 4)) / 2;
     character_stats.out_of_combat_mana_regen_per_sec = character_stats.mana_regen_from_spirit;
-    // Adding Crit chance from base and intelecct
-    character_stats.crit_chance += (5 + Math.round(character_stats.intelect / 59.5));
+    // Adding Crit chance from base and intellect
+    character_stats.crit_chance += (5 + Math.round(character_stats.intellect / 59.5));
 }
 function calculate_dps(spec) {
+    let result = document.getElementById('result');
+
     get_input();
     create_character_stats();
 
-    let result = document.getElementById('result');
-    result.innerHTML = '<h3>RESULTS:</h3>';
-
-    // Using Mage Armor + Arcane Intelect + Mana Ruby
+    // Using Mage Armor + Arcane Intellect
     character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.3;
     character_stats.max_mana += 31 * 15;
-    character_stats.max_mana += 1100;
 
-    if (spec === 'raid_arc') {
-        // spell - Arcane Missiles
-        let spell_cast_time = 5;
-        let spell_dmg_per_cast = (195 * 5);
-        spell_dmg_per_cast += character_stats.spell_dmg;
-        let spell_cost = 595;
+    if (spec === 'Arc_frost') {
+        let spell_cast_time = spells[chosen_spell].cast_time;
+        let spell_dmg_per_cast = spells[chosen_spell].add_spell_damage();
+        let spell_cost = spells[chosen_spell].cost;
         let spell_crit_multiplier = 1.5;
 
         // TALENTS
-        // Arcane Focus 5/5
-        character_stats.hit_chance += 10;
-        // Clear Casting 5/5
-        spell_cost = spell_cost / 2;
         // Arcane Meditation 3/3
         character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
         // Arcane Mind 5/5
         character_stats.max_mana += character_stats.max_mana * 0.1;
-        // Arcane Instability 3/3
-        spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
-        character_stats.crit_chance += 3;
+        
+        // Frostbolt
+        if (spells[chosen_spell].name === 'Frostbolt R10' || spells[chosen_spell].name === 'Frostbolt R11') {
+            // Arcane Instability 3/3
+            character_stats.crit_chance += 3;
+            // Improved Frostbolt 5/5
+            spell_cast_time -= 0.5;
+            // Piercing Ice 3/3 + Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.09;
+            // Frost Chanelling 3/3 + Clearcasting 5/5
+            spell_cost -= spell_cost * 0.25;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 6;
+            // Ice Shards 5/5
+            spell_crit_multiplier = 2;
+        }
+        
+        // Arc Missiles
+        if (spells[chosen_spell].name === 'Arcane Missiles R7' || spells[chosen_spell].name === 'Arcane Missiles R8') {
+            // Arcane Focus 5/5
+            character_stats.hit_chance += 6;
+            // Clear Casting 5/5
+            spell_cost -= spell_cost / 10;
+            // Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            character_stats.crit_chance += 3;
+        }
 
-        // fight(spell_cast_time, Math.round(spell_dmg_per_cast), spell_cost, spell_crit_multiplier);
+        // Fireball
+        if (spells[chosen_spell].name === 'Fireball R11' || spells[chosen_spell].name === 'Fireball R12') {
+            // Clear Casting 5/5
+            spell_cost -= spell_cost / 10;
+            // Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            character_stats.crit_chance += 3;
+        }
 
-        // spell - Frostbolt
-        let frostbolt_cast_time = 2.5;
-        let frostbolt_dmg_per_cast = (429 + 463) / 2;
-        frostbolt_dmg_per_cast += character_stats.spell_dmg * 0.814;
-        let frostbolt_cost = 260;
-        let frostbolt_crit_multiplier = 1.5;
+        fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier);
+    } else if (spec === "Arc_fire") {
 
-        // Elemental Precision 3/3
-        character_stats.hit_chance -= 4;
-        // Ice Shards 5/5
-        frostbolt_crit_multiplier = 2;
-        // Piercing Ice 3/3 + Arcane Instability 3/3
-        frostbolt_dmg_per_cast += frostbolt_dmg_per_cast * 0.09;
-        // Frost Chanelling 3/3 + Clearcasting 5/5
-        frostbolt_cost -= frostbolt_cost * 0.25;
-        // Winter's Chill 5/5 from other player
-        character_stats.crit_chance += 10;
-
-        fight(frostbolt_cast_time, Math.round(frostbolt_dmg_per_cast), frostbolt_cost, frostbolt_crit_multiplier);
-    }
-
-    // All these spec wirh with old stats input. Needs to work with: character_stats
-    if (spec === 'current') {
-        // Gear at lvl 40
-        intelect = 206;
-        spirit = 160;
-        spell_hit_chance = 99;
-        spell_critical_chance = (5 + Math.round(intelect / 59));
-        // Mage Armor
-        in_combat_mana_regen = out_of_combat_mana_regen_per_sec * 0.3;
-        character_max_mana = intelect * 15;
-        plus_spell_dmg = 23;
-
-        //spell - Arcane Missiles
-        let spell_cast_time = 5;
-        let spell_dmg_per_cast = 119 * 5;
-        let spell_cost = 410;
+    } else if (spec === "Fire") {
+        let spell_cast_time = spells[chosen_spell].cast_time;
+        let spell_dmg_per_cast = spells[chosen_spell].add_spell_damage();
+        let spell_cost = spells[chosen_spell].cost;
         let spell_crit_multiplier = 1.5;
 
         // TALENTS
-        // Arcane Focus 2/5
-        spell_hit_chance = 99;
-        // Clear Casting 5/5
-        spell_cost = spell_cost / 2;
-        // Arcane Mind 4/5
-        character_max_mana += character_max_mana * 0.08;
-        // Arcane Instability 2/3
-        spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
-        spell_critical_chance += 3;
-
-
-        fight(spell_cast_time, spell_dmg_per_cast, spell_cost, spell_crit_multiplier);
-    }
-    // Specs at lvl 40 - Need correction
-    if (spec === 'arcane') {
-        // spell - Arcane Missiles
-        let spell_cast_time = 5;
-        let spell_dmg_per_cast = (195 * 5);
-        spell_dmg_per_cast += plus_spell_dmg;
-        let spell_cost = 595;
-        let spell_crit_multiplier = 1.5;
-
-        // TALENTS
-        // Arcane Focus 5/5
-        spell_hit_chance += 10;
-        // Clear Casting 5/5
-        spell_cost = spell_cost / 2;
         // Arcane Meditation 3/3
-        in_combat_mana_regen += out_of_combat_mana_regen_per_sec * 0.15;
+        character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
         // Arcane Mind 5/5
-        character_max_mana += character_max_mana * 0.1;
-        // Arcane Instability 3/3
-        spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
-        spell_critical_chance += 3;
+        character_stats.max_mana += character_stats.max_mana * 0.1;
 
-        fight(spell_cast_time, spell_dmg_per_cast, spell_cost, spell_crit_multiplier);
-    }
-    if (spec === 'fire') {
-        // spell - Fireball
-        let spell_cast_time = 3;
-        let spell_dmg_per_cast = (561 + 715) / 2;
-        spell_dmg_per_cast += plus_spell_dmg;
-        let spell_cost = 395;
-        let spell_crit_multiplier = 1.5;
+        // Arc Missiles
+        if (spells[chosen_spell].name === 'Arcane Missiles R7' || spells[chosen_spell].name === 'Arcane Missiles R8') {
+            // Arcane Focus 5/5
+            character_stats.hit_chance += 10;
+            // Clear Casting 5/5
+            spell_cost -= spell_cost / 10;
+            // Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            character_stats.crit_chance += 3;
+        }
 
-        // spell - Scorch
-        var scorch_cast_time = 1.5;
-        var scorch_dmg_per_cast = (233 + 275) / 2;
-        scorch_dmg_per_cast += plus_spell_dmg * 0.429;
-        var scorch_cost = 150;
-        var scorch_crit_multiplier = 1.5;
+        // Frostbolt
+        if (spells[chosen_spell].name === 'Frostbolt R10' || spells[chosen_spell].name === 'Frostbolt R11') {
+            // Arcane Instability 3/3
+            character_stats.crit_chance += 3;
+            // Improved Frostbolt 5/5
+            spell_cast_time -= 0.5;
+            // Piercing Ice 3/3 + Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.09;
+            // Frost Chanelling 3/3 + Clearcasting 5/5
+            spell_cost -= spell_cost * 0.25;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 6;
+            // Ice Shards 5/5
+            spell_crit_multiplier = 2;
+        }
 
-        //TALENTS
-        // Elemental Precision 3/3
-        spell_hit_chance += 6;
-        // Critical Mass 3/3
-        spell_critical_chance += 6;
-        // Master of Elements 3/3
-        spell_cost -= spell_cost * 0.3 * (spell_critical_chance / 100);
-        scorch_cost -= scorch_cost * 0.3 * (spell_critical_chance / 100);
-        // Fire Power 5/5 + Improved Scorch 3/3
-        spell_dmg_per_cast = spell_dmg_per_cast * 1.25;
-        scorch_dmg_per_cast = scorch_dmg_per_cast * 1.25;
-        // Ignite 5/5
-        spell_crit_multiplier = 2.1;
-        scorch_crit_multiplier = 2.1;
+        // Fireball
+        if (spells[chosen_spell].name === 'Fireball R11' || spells[chosen_spell].name === 'Fireball R12') {
+            // Clear Casting 5/5
+            spell_cost -= spell_cost / 10;
+            // Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            character_stats.crit_chance += 3;
+        }
 
-        fight(spell_cast_time, spell_dmg_per_cast, spell_cost, spell_crit_multiplier)
-    }
-    if (spec === 'frost') {
-        // spell - Frost Bolt
-        let spell_cast_time = 2.5;
-        let spell_dmg_per_cast = (437 + 473) / 2;
-        spell_dmg_per_cast += plus_spell_dmg * 0.814;
-        let spell_cost = 260;
+        fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier);
+
+    } else if (spec === "Frost") {
+        let spell_cast_time = spells[chosen_spell].cast_time;
+        let spell_dmg_per_cast = spells[chosen_spell].add_spell_damage();
+        let spell_cost = spells[chosen_spell].cost;
         let spell_crit_multiplier = 1.5;
 
         // TALENTS
-        // Elemental Precision 3/3
-        spell_hit_chance += 6;
-        // Piercing Ice 3/3
-        spell_dmg_per_cast += spell_dmg_per_cast * 0.06;
-        // Ice Shards 5/5
-        spell_crit_multiplier = 2;
-        // Frost Chanelling 3/3
-        spell_cost -= spell_cost * 0.15;
-        // Winter's Chill 5/5
-        spell_critical_chance += 10;
+        // Arcane Meditation 3/3
+        character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
 
-        fight(spell_cast_time, spell_dmg_per_cast, spell_cost, spell_crit_multiplier);
+        // Frostbolt
+        if (spells[chosen_spell].name === 'Frostbolt R10' || spells[chosen_spell].name === 'Frostbolt R11') {
+            // Improved Frostbolt 5/5
+            spell_cast_time -= 0.5;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 6;
+            // Ice Shards 5/5
+            spell_crit_multiplier = 2;
+            // Piercing Ice 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.06;
+            // Frost Chanelling 3/3 + Clearcasting 5/5
+            spell_cost -= spell_cost * 0.25;
+            // Winter's Chill 5/5 from other player
+            character_stats.crit_chance += 10;
+        }
+        
+        // Fireball
+        if (spells[chosen_spell].name === 'Fireball R11' || spells[chosen_spell].name === 'Fireball R12') {
+            // Clear Casting 5/5
+            spell_cost -= spell_cost / 10;
+        }
+        
+        // Arc Missiles
+        if (spells[chosen_spell].name === 'Arcane Missiles R7' || spells[chosen_spell].name === 'Arcane Missiles R8') {
+            // Arcane Focus 5/5
+            character_stats.hit_chance += 6;
+            // Clear Casting 5/5
+            spell_cost -= spell_cost / 10;
+        }
+        
+        fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier);
     }
 
     function fight(cast_time, dmg, cost, crit_multiplier) {
         let hit_percent = check_correct_hit_chance(character_stats.hit_chance, character_stats.enemy_lvl);
         let time_in_seconds = 0;
         let total_dmg = 0;
-        let is_arc_power_on = false;
-        let arc_power_timer = 0;
 
-        // Fire not working with new stats: character_stats
-        if (spec === 'fire') {
-            while (character_current_mana > 0) {
-                let scorch_timer = 0
-                if (time_in_seconds === 0) {
-                    let dmg_with_hit_chance = scorch_dmg_per_cast - (scorch_dmg_per_cast * (100 - spell_hit_chance) / 100);
-                    let dmg_done_per_cast = ((((100 - spell_critical_chance) * dmg_with_hit_chance) + (spell_critical_chance * (dmg_with_hit_chance * scorch_crit_multiplier))) / 100);
-                    total_dmg += Math.round(dmg_done_per_cast * 5);
-                    time_in_seconds += scorch_cast_time * 5;
-                    character_current_mana += (in_combat_mana_regen * scorch_cast_time * 5)
-                    character_current_mana -= scorch_cost * 5;
-                    scorch_timer = 30;
-                } else if (scorch_timer <= 5) {
-                    let dmg_with_hit_chance = scorch_dmg_per_cast - (scorch_dmg_per_cast * (100 - spell_hit_chance) / 100);
-                    let dmg_done_per_cast = ((((100 - spell_critical_chance) * dmg_with_hit_chance) + (spell_critical_chance * (dmg_with_hit_chance * scorch_crit_multiplier))) / 100);
-                    total_dmg += Math.round(dmg_done_per_cast);
-                    time_in_seconds += scorch_cast_time;
-                    character_current_mana += (in_combat_mana_regen * scorch_cast_time)
-                    character_current_mana -= scorch_cost;
-                    scorch_timer = 30;
-                } else {
-                    //Calc. avarage dmage per cast with hit chance
-                    let dmg_with_hit_chance = dmg - (dmg * (100 - spell_hit_chance) / 100);
-                    // Adding crit chance
-                    let dmg_done_per_cast = ((((100 - spell_critical_chance) * dmg_with_hit_chance) + (spell_critical_chance * (dmg_with_hit_chance * crit_multiplier))) / 100);
-                    total_dmg += Math.round(dmg_done_per_cast);
-                    time_in_seconds += cast_time;
-                    character_current_mana += (in_combat_mana_regen * cast_time)
-                    character_current_mana -= cost;
-                }
-            }
-        } else {
+        if (spec === 'Arc_fire') {
+
+        } else if (spec === 'Fire') {
+
+        } else if (spec === 'Frost') {
             for (let i = 0; i < 500; i++) {
                 let character_current_mana = character_stats.max_mana;
-                while (character_current_mana > 0) {
+                let mana_ruby_used = false;
+                let mana_gem_timer = 0;
+                let mana_citrine_used = false;
+
+                while (character_current_mana >= cost) {
+                    // Useing Mana Gems
+                    if (mana_ruby_used === false && character_current_mana <= character_stats.max_mana - 1200) {
+                        character_current_mana += 1100;
+                        mana_gem_timer = time_in_seconds;
+                        mana_ruby_used = true;
+                    } else if (mana_gem_timer + 120 >= time_in_seconds && mana_citrine_used === false) {
+                        character_current_mana += 850;
+                        mana_citrine_used = true;
+                    }
+
+                    // Calculating if it Hits
+                    if (successful_roll(hit_percent)) {
+                        // Calculating if it Crits
+                        if (successful_roll(character_stats.crit_chance)) {
+                            total_dmg += dmg * crit_multiplier;
+                            character_current_mana -= cost;
+                        } else {
+                            total_dmg += dmg;
+                            character_current_mana -= cost;
+                        }
+                    } else {
+                        character_current_mana -= cost;
+                    }
+
+                    time_in_seconds += cast_time;
+                    character_current_mana += (character_stats.in_combat_mana_regen * cast_time)
+                }
+            }
+        } else if (spec === 'Arc_frost') {
+            for (let i = 0; i < 500; i++) {
+                let character_current_mana = character_stats.max_mana;
+                let is_arc_power_on = false;
+                let arc_power_timer = 0;
+                let mana_ruby_used = false;
+                let mana_gem_timer = 0;
+                let mana_citrine_used = false;
+
+                while (character_current_mana > cost) {
+                    // Useing Mana Gems
+                    if (mana_ruby_used === false && character_current_mana <= character_stats.max_mana - 1200) {
+                        character_current_mana += 1100;
+                        mana_gem_timer = time_in_seconds;
+                        mana_ruby_used = true;
+                    } else if (mana_gem_timer + 120 >= time_in_seconds && mana_citrine_used === false) {
+                        character_current_mana += 850;
+                        mana_citrine_used = true;
+                    }
+
                     // Cast Arcane Power
                     if (time_in_seconds % 180 === 0) {
                         is_arc_power_on = true;
@@ -286,7 +359,7 @@ function calculate_dps(spec) {
                             if (is_arc_power_on && arc_power_timer > 0) {
                                 total_dmg += dmg * crit_multiplier * 1.3;
                                 character_current_mana -= cost * 1.3;
-                            } else {    
+                            } else {
                                 total_dmg += dmg * crit_multiplier;
                                 character_current_mana -= cost;
                             }
@@ -299,7 +372,7 @@ function calculate_dps(spec) {
                                 character_current_mana -= cost;
                             }
                         }
-                    } else{
+                    } else {
                         character_current_mana -= cost;
                     }
 
@@ -350,12 +423,12 @@ function calculate_dps(spec) {
     };
 }
 
-// MC Boss fights ~ 3 min
-// MC Mage avrg DPS ~ 362
-
 // TODO:
-// - Add Clear Casting
 // - Add Arc Power + Trinket!
-// - Spirit tick on 2 sec
 // - Add FireBlast casting option
-// - Random spell Dmg?
+// - Add Evocation
+// - Finish talants for Fire and Arc_Fire
+// - Finish calculation for Fire and Arc_Fire
+// - Avarage out the dmg, no need of so much randomness
+// - Make a Function for Mana gem/ maybe Arc Power, Scorch debuff, Evo
+// - Add Stat Weight
