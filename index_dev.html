@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>WoW Classic DPS Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="development_mage_dps.js"></script>
+    <meta name="google-site-verification" content="Oh-l_KBd_LpWIG3LF_hBzo7p73atmB2UcLi1ySgMoS8" />
+    <meta property="og:title" content="WoW Classic DPS Calculator" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.wowclassicdpscalculator.com/" />
+    <meta property="og:image" content="https://www.wowclassicdpscalculator.com/images/WoW_engineering.jpg" />
+    <meta property="og:description"
+        content="A Class Damage Calculator dedicated to the game World of Warcraft Classic" />
+    <meta name="keywords" content="World of Warcraft, WoW, Classic, DPS, Calculator, mage">
+    <meta property="og:determiner" content="a" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="56" />
+    <meta property="og:image:height" content="56" />
+    <meta property="og:image:alt" content="A yellow gear wheel" />
+    <link rel="shortcut icon" href="images/WoW_engineering.jpg" type="image/x-icon">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <h1>WoW Classic DPS Calculator</h1>
+        </header>
+        <main>
+            <div class="centred">
+                <h3>
+                    <span>60 Level Class:</span>
+                    <select name="class" id="chosen_class">
+                        <option value="mage">Mage</option>
+                        <option value="shaman" disabled>Shaman</option>
+                        <option value="priest" disabled>Priest</option>
+                        <option value="warlock" disabled>Warlock</option>
+                    </select>
+                </h3>
+                <div>
+                    <span>Talents Used:</span>
+                    <select name="talents" id="chosen_talents" onchange="talent_html()">
+                        <option value="Arc_frost">Arcane - Frost (31/0/20)</option>
+                        <option value="Arc_fire">Arcane - Fire (31/18/2)</option>
+                        <option value="Fire">Fire (18/31/2)</option>
+                        <option value="Frost">Frost(20/0/31)</option>
+                    </select>
+                    <a id="talent_link" target="_blank" rel="noopener noreferrer" href="https://classic.wowhead.com/talent-calc/mage/2300450310031531--053500030013">Link</a>
+                </div>
+                <form id="calculation_form" name="CharStats" action="javascript:calculate_dps('Arc_frost');">
+                    <h2>Character Attributes</h2>
+                    <div class="char_stats">
+                        <div class="char_variables_group stats">
+                            <div>
+                                <label for="input_intellect">Intellect:</label>
+                                <input type="number" id="input_intellect" required min="0" step="1"
+                                    title="Positive integer" placeholder="283" value="288" autofocus>
+                            </div>
+                            <div>
+                                <label for="input_spirit">Spirit:</label>
+                                <input type="number" id="input_spirit" required min="0" step="1"
+                                    title="Positive integer" placeholder="194" value="186">
+                            </div>
+                            <div>
+                                <label for="input_mana_per_5">Mana per 5 sec:</label>
+                                <input type="number" id="input_mana_per_5" required min="0" step="1"
+                                    title="Positive integer" placeholder="8" value="12">
+                            </div>
+                            <div>
+                                <label for="input_spell_dmg">Plus Spell Damage:</label>
+                                <input type="number" id="input_spell_dmg" required min="0" step="1"
+                                    title="Positive integer" placeholder="220" value="321">
+                            </div>
+                            <div>
+                                <label for="input_spell_hit">Spell Hit from gear:</label>
+                                <input type="number" id="input_spell_hit" required min="0" step="1"
+                                    title="Positive integer" placeholder="2" value="7">
+                            </div>
+                            <div>
+                                <label for="input_spell_crit">Spell Crit from gear:</label>
+                                <input type="number" id="input_spell_crit" required min="0" step="1"
+                                    title="Positive integer" placeholder="3" value="2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="spell_select">
+                        <span>Spell Used:</span>
+                        <select name="spell" id="chosen_spell">
+                            <option value="frostbolt_11">Frostbolt R11</option>
+                            <option value="frostbolt_10">Frostbolt R10</option>
+                            <option value="fireball_12" >Fireball R12</option>
+                            <option value="fireball_11" >Fireball R11</option>
+                            <option value="arcane_missiles_8" >Arcane Missiles R8</option>
+                            <option value="arcane_missiles_7" >Arcane Missiles R7</option>
+                        </select>
+                    </div>
+                    <div id="evocation_div">
+                        <label for="input_evocation">Use Evocation:</label>
+                        <input type="checkbox" name="Evocation" id="input_evocation" checked>
+                    </div>
+                    <h3>
+                        <span>Enemy LvL:</span>
+                        <select name="enemy_lvl" id="enemy_lvl">
+                            <option value="63">Boss (63)</option>
+                            <option value="60">Player (60)</option>
+                        </select>
+                    </h3>
+                    <div class="buttons">
+                        <input class="submit" name="submit" type="submit" value="Calculate" />
+                        <input type="reset" value="Reset">
+                    </div>
+                </form>
+                <div id="result">
+                    <h3>RESULTS:</h3>
+                </div>
+                <div id="about">
+                    <h3>How is it calculated:</h3>
+                    <div class="text_box">
+                        <p>Rotation used: Arcane Power on cool down and casts only Frostbolt Rank 10 as character level
+                            60.</p>
+                        <p>The calculation creates a character using the given attributes.</p>
+                        <p>Then simulates a fight against the chosen enemy.</p>
+                        <p>The simulation ends when the character has no more mana to cast his spells. The sequence is
+                            repeated 500 times and prints the average numbers.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>Keep in mind this is Work in Progress<br>Feedback is always welcome at: <a
+                    href="mailto:shopov.metodi@gmail.com">shopov.metodi@gmail.com</a>.</p>
+            <p>Created by Metodi Shopov © 2019</p>
+        </footer>
+    </div>
+</body>
+
+</html>

@@ -1,5 +1,4 @@
 let character_stats = {};
-let talents_chosen;
 let chosen_spell;
 
 // Mage Spell
@@ -75,6 +74,7 @@ const spells = {
         }
     }
 }
+
 function talent_html() {
     let selected_spec = document.getElementById("chosen_talents").value;
     let a_element = document.getElementById("talent_link");
@@ -114,8 +114,8 @@ function get_input() {
     character_stats.hit_chance = Number(document.getElementById('input_spell_hit').value);
     character_stats.crit_chance = Number(document.getElementById('input_spell_crit').value);
     character_stats.enemy_lvl = Number(document.getElementById('enemy_lvl').value);
-    talents_chosen = document.getElementById('chosen_talents').value;
-    chosen_spell = document.getElementById('chosen_spell').value;
+    character_stats.evocation_enabled = document.getElementById('input_evocation').checked;
+    character_stats.chosen_spell = document.getElementById('chosen_spell').value;
 };
 
 function create_character_stats() {
@@ -129,6 +129,7 @@ function create_character_stats() {
 }
 function calculate_dps(spec) {
     let result = document.getElementById('result');
+    result.innerHTML = `<h3>RESULTS:</h3><p>Before use of Evocation:</p>`;
 
     get_input();
     create_character_stats();
@@ -137,12 +138,13 @@ function calculate_dps(spec) {
     character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.3;
     character_stats.max_mana += 31 * 15;
 
-    if (spec === 'Arc_frost') {
-        let spell_cast_time = spells[chosen_spell].cast_time;
-        let spell_dmg_per_cast = spells[chosen_spell].add_spell_damage();
-        let spell_cost = spells[chosen_spell].cost;
-        let spell_crit_multiplier = 1.5;
+    // Spell info    
+    let spell_cast_time = spells[character_stats.chosen_spell].cast_time;
+    let spell_dmg_per_cast = spells[character_stats.chosen_spell].add_spell_damage();
+    let spell_cost = spells[character_stats.chosen_spell].cost;
+    let spell_crit_multiplier = 1.5;
 
+    if (spec === 'Arc_frost') {
         // TALENTS
         // Arcane Meditation 3/3
         character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
@@ -150,7 +152,7 @@ function calculate_dps(spec) {
         character_stats.max_mana += character_stats.max_mana * 0.1;
 
         // Frostbolt
-        if (spells[chosen_spell].name === 'Frostbolt R10' || spells[chosen_spell].name === 'Frostbolt R11') {
+        if (spells[character_stats.chosen_spell].name === 'Frostbolt R10' || spells[character_stats.chosen_spell].name === 'Frostbolt R11') {
             // Arcane Instability 3/3
             character_stats.crit_chance += 3;
             // Improved Frostbolt 5/5
@@ -166,20 +168,20 @@ function calculate_dps(spec) {
         }
 
         // Arc Missiles
-        if (spells[chosen_spell].name === 'Arcane Missiles R7' || spells[chosen_spell].name === 'Arcane Missiles R8') {
+        if (spells[character_stats.chosen_spell].name === 'Arcane Missiles R7' || spells[character_stats.chosen_spell].name === 'Arcane Missiles R8') {
             // Arcane Focus 5/5
             character_stats.hit_chance += 6;
             // Clear Casting 5/5
-            spell_cost -= spell_cost / 10;
+            spell_cost -= spell_cost * 0.1;
             // Arcane Instability 3/3
             spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
             character_stats.crit_chance += 3;
         }
 
         // Fireball
-        if (spells[chosen_spell].name === 'Fireball R11' || spells[chosen_spell].name === 'Fireball R12') {
+        if (spells[character_stats.chosen_spell].name === 'Fireball R11' || spells[character_stats.chosen_spell].name === 'Fireball R12') {
             // Clear Casting 5/5
-            spell_cost -= spell_cost / 10;
+            spell_cost -= spell_cost * 0.1;
             // Arcane Instability 3/3
             spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
             character_stats.crit_chance += 3;
@@ -187,21 +189,125 @@ function calculate_dps(spec) {
 
         fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier);
     } else if (spec === "Arc_fire") {
+        let scorch_spell = {};
+        scorch_spell.dmg = spells.scorch.add_spell_damage();
+        scorch_spell.cost = spells.scorch.cost;
+        scorch_spell.cast_time = spells.scorch.cast_time;
+        scorch_spell.crit_multiplier = spell_crit_multiplier;
+        scorch_spell.crit_chance = character_stats.crit_chance;
 
+        // TALENTS
+        // Arcane Meditation 3/3
+        character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
+        // Arcane Mind 5/5
+        character_stats.max_mana += character_stats.max_mana * 0.1;
+
+        // Frostbolt
+        if (spells[character_stats.chosen_spell].name === 'Frostbolt R10' || spells[character_stats.chosen_spell].name === 'Frostbolt R11') {
+            // Clearcasting 5/5
+            spell_cost -= spell_cost * 0.1;
+            // Arcane Instability 3/3
+            character_stats.crit_chance += 3;
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 4;
+        }
+
+        // Arc Missiles
+        if (spells[character_stats.chosen_spell].name === 'Arcane Missiles R7' || spells[character_stats.chosen_spell].name === 'Arcane Missiles R8') {
+            // Arcane Focus 5/5
+            character_stats.hit_chance += 6;
+            // Clear Casting 5/5
+            spell_cost -= spell_cost * 0.1;
+            // Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            character_stats.crit_chance += 3;
+        }
+
+        // Fireball
+        if (spells[character_stats.chosen_spell].name === 'Fireball R11' || spells[character_stats.chosen_spell].name === 'Fireball R12') {
+            // Clear Casting 5/5
+            spell_cost -= spell_cost * 0.1;
+            scorch_spell.cost -= spell_cost * 0.1;
+            // Arcane Instability 3/3
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.03;
+            scorch_spell.dmg += scorch_spell.dmg * 0.03;
+            character_stats.crit_chance += 3;
+            scorch_spell.crit_chance += 3;
+            // Improved fireball
+            spell_cast_time -= 0.5;
+            // Ignite
+            spell_crit_multiplier = 2.1;
+            scorch_spell.crit_multiplier = 2.1;
+            // Incinerate
+            scorch_spell.crit_chance += 4;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 4;
+        }
+
+        fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier, scorch_spell);
     } else if (spec === "Fire") {
-
-    } else if (spec === "Frost") {
-        let spell_cast_time = spells[chosen_spell].cast_time;
-        let spell_dmg_per_cast = spells[chosen_spell].add_spell_damage();
-        let spell_cost = spells[chosen_spell].cost;
-        let spell_crit_multiplier = 1.5;
+        let scorch_spell = {};
+        scorch_spell.dmg = spells.scorch.add_spell_damage();
+        scorch_spell.cost = spells.scorch.cost;
+        scorch_spell.cast_time = spells.scorch.cast_time;
+        scorch_spell.crit_multiplier = spell_crit_multiplier;
+        scorch_spell.crit_chance = character_stats.crit_chance;
 
         // TALENTS
         // Arcane Meditation 3/3
         character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
 
         // Frostbolt
-        if (spells[chosen_spell].name === 'Frostbolt R10' || spells[chosen_spell].name === 'Frostbolt R11') {
+        if (spells[character_stats.chosen_spell].name === 'Frostbolt R10' || spells[character_stats.chosen_spell].name === 'Frostbolt R11') {
+            // Clearcasting 5/5
+            spell_cost -= spell_cost * 0.1;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 4;
+        }
+
+        // Arc Missiles
+        if (spells[character_stats.chosen_spell].name === 'Arcane Missiles R7' || spells[character_stats.chosen_spell].name === 'Arcane Missiles R8') {
+            // Arcane Focus 5/5
+            character_stats.hit_chance += 6;
+            // Clear Casting 5/5
+            spell_cost -= spell_cost * 0.1;
+        }
+
+        // Fireball
+        if (spells[character_stats.chosen_spell].name === 'Fireball R11' || spells[character_stats.chosen_spell].name === 'Fireball R12') {
+            // Clear Casting 5/5
+            spell_cost -= spell_cost * 0.1;
+            scorch_spell.cost -= spell_cost * 0.1;
+            // Improved Fireball
+            spell_cast_time -= 0.5;
+            // Ignite
+            spell_crit_multiplier = 2.1;
+            scorch_spell.crit_multiplier = 2.1;
+            // Critical Mass
+            character_stats.crit_chance += 6;
+            scorch_spell.crit_chance += 6;
+            // Incinerate
+            scorch_spell.crit_chance += 4;
+            // Master of Elements
+            spell_cost = ((100 - character_stats.crit_chance) * spell_cost + (character_stats.crit_chance * spell_cost * 0.7)) / 100;
+            scorch_spell.cost = ((100 - scorch_spell.crit_chance) * scorch_spell.cost + (scorch_spell.crit_chance * scorch_spell.cost * 0.7)) / 100;
+            // Fire Power
+            spell_dmg_per_cast += spell_dmg_per_cast * 0.1;
+            scorch_spell.dmg += scorch_spell.dmg * 0.1;
+            // Elemental Precision 3/3
+            character_stats.hit_chance += 4;
+        }
+
+        fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier, scorch_spell);
+
+    } else if (spec === "Frost") {
+        // TALENTS
+        // Arcane Meditation 3/3
+        character_stats.in_combat_mana_regen += character_stats.out_of_combat_mana_regen_per_sec * 0.15;
+
+        // Frostbolt
+        if (spells[character_stats.chosen_spell].name === 'Frostbolt R10' || spells[character_stats.chosen_spell].name === 'Frostbolt R11') {
             // Improved Frostbolt 5/5
             spell_cast_time -= 0.5;
             // Elemental Precision 3/3
@@ -217,26 +323,27 @@ function calculate_dps(spec) {
         }
 
         // Fireball
-        if (spells[chosen_spell].name === 'Fireball R11' || spells[chosen_spell].name === 'Fireball R12') {
+        if (spells[character_stats.chosen_spell].name === 'Fireball R11' || spells[character_stats.chosen_spell].name === 'Fireball R12') {
             // Clear Casting 5/5
-            spell_cost -= spell_cost / 10;
+            spell_cost -= spell_cost * 0.1;
         }
 
         // Arc Missiles
-        if (spells[chosen_spell].name === 'Arcane Missiles R7' || spells[chosen_spell].name === 'Arcane Missiles R8') {
+        if (spells[character_stats.chosen_spell].name === 'Arcane Missiles R7' || spells[character_stats.chosen_spell].name === 'Arcane Missiles R8') {
             // Arcane Focus 5/5
             character_stats.hit_chance += 6;
             // Clear Casting 5/5
-            spell_cost -= spell_cost / 10;
+            spell_cost -= spell_cost * 0.1;
         }
 
         fight(spell_cast_time, Math.round(spell_dmg_per_cast), Math.round(spell_cost), spell_crit_multiplier);
     }
 
-    function fight(cast_time, dmg, cost, crit_multiplier) {
+    function fight(cast_time, dmg, cost, crit_multiplier, scorch_obj) {
         let time_in_seconds = 0;
         let total_dmg_done = 0;
         let character_current_mana = character_stats.max_mana;
+        let evocation_used = false;
         let mana_ruby_used = false;
         let mana_citrine_used = false;
         let mana_gem_timer = 0;
@@ -244,24 +351,19 @@ function calculate_dps(spec) {
         // Decreasing Spell dmg because of hit/misses
         let spell_final_dmg = dmg * hit_percent / 100;
         // increasing Spell dmg because of Crits
-        spell_final_dmg = crit_multiplier * character_stats.crit_chance + spell_final_dmg - character_stats.crit_chance;
-        
+        spell_final_dmg = ((100 - character_stats.crit_chance) * spell_final_dmg + (spell_final_dmg * character_stats.crit_chance * crit_multiplier)) / 100;
+
         if (spec === 'Frost') {
             while (character_current_mana >= cost) {
                 // Useing Mana Gems
-                if (mana_ruby_used === false && character_current_mana <= character_stats.max_mana - 1200) {
-                    character_current_mana += 1100;
-                    mana_gem_timer = time_in_seconds;
-                    mana_ruby_used = true;
-                } else if (mana_gem_timer + 120 >= time_in_seconds && mana_citrine_used === false) {
-                    character_current_mana += 850;
-                    mana_citrine_used = true;
-                }
+                use_mana_gem();
 
                 total_dmg_done += spell_final_dmg;
                 character_current_mana -= cost;
                 time_in_seconds += cast_time;
                 character_current_mana += (character_stats.in_combat_mana_regen * cast_time);
+                // Check if Evocation Evocation should be used
+                use_evocation()
             }
         } else if (spec === 'Arc_frost') {
             let is_arc_power_on = false;
@@ -269,14 +371,7 @@ function calculate_dps(spec) {
 
             while (character_current_mana > cost) {
                 // Useing Mana Gems
-                if (mana_ruby_used === false && character_current_mana <= character_stats.max_mana - 1200) {
-                    character_current_mana += 1100;
-                    mana_gem_timer = time_in_seconds;
-                    mana_ruby_used = true;
-                } else if (mana_gem_timer + 120 >= time_in_seconds && mana_citrine_used === false) {
-                    character_current_mana += 850;
-                    mana_citrine_used = true;
-                }
+                use_mana_gem();
 
                 // Cast Arcane Power
                 if (time_in_seconds % 180 === 0) {
@@ -296,6 +391,8 @@ function calculate_dps(spec) {
                 arc_power_timer -= cast_time;
                 time_in_seconds += cast_time;
                 character_current_mana += (character_stats.in_combat_mana_regen * cast_time)
+                // Check if Evocation Evocation should be used
+                use_evocation()
             }
         } else if (spec === 'Arc_fire') {
 
@@ -304,14 +401,39 @@ function calculate_dps(spec) {
         };
 
         printResult(total_dmg_done, Math.round(time_in_seconds));
+
+        function use_mana_gem() {
+            if (mana_ruby_used === false && character_current_mana <= character_stats.max_mana - 1200) {
+                character_current_mana += 1100;
+                mana_gem_timer = time_in_seconds + 120;
+                mana_ruby_used = true;
+            } else if (mana_gem_timer <= time_in_seconds && mana_citrine_used === false && mana_ruby_used === true && character_current_mana <= character_stats.max_mana - 850) {
+                character_current_mana += 850;
+                mana_citrine_used = true;
+                console.log('Yes Citrine');
+                console.log(mana_gem_timer);
+                console.log(time_in_seconds);
+            }
+        };
+
+        function use_evocation(){
+            if (character_stats.evocation_enabled && character_current_mana < cost && evocation_used == false) {
+                printResult(total_dmg_done, Math.round(time_in_seconds));
+                evocation_used = true;
+                character_current_mana += character_stats.out_of_combat_mana_regen_per_sec * 15 * 8;
+                character_current_mana += character_stats.mana_per_5 / 5 * 8;
+                time_in_seconds += 8;
+                result.innerHTML += `<p>Evocation used at: ${Math.round(time_in_seconds)}</p>`;
+                result.innerHTML += `<p>With use of Evocation:</p>`;
+            }
+        }
     }
 
     function printResult(total, seconds) {
-        result.innerHTML = '<h3>RESULTS:</h3>';
         result.innerHTML += `<div class="result_box">
-                            <h4>Total damage done: ${Math.round(total)}</h4>
-                            <h3>Damage Per Second: ${Math.round(total / seconds)}</h3>
-                            <h4>Time elapsed: ${seconds}</h4>
+                            <p>Damage done: ${Math.round(total)}</p>
+                            <p>DPS: ${Math.round(total / seconds)}</p>
+                            <p>Time elapsed: ${seconds}</p>
                             </div>`;
     };
 
@@ -346,11 +468,10 @@ function calculate_dps(spec) {
 // TODO:
 // - Add Arc Power + Trinket!
 // - Add FireBlast casting option
-// - Add Evocation
-// - Finish talants for Fire and Arc_Fire
 // - Finish calculation for Fire and Arc_Fire
 // - Arcane Power works only once per fight!!
-// - Make a Function for Mana gem/ maybe Arc Power, Scorch debuff, Evo
+// - Make a Function for Arc Power, Scorch debuff
 // - Add Stat Weight
 // - Form button Reset does not reset chosen spell correctly on different talant specs selected
+// - Reset button does not reset result text
 // - Scorch crit multyplier on different specs
